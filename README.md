@@ -3,7 +3,7 @@ Practical Machine Learning Course Project Assigment
 
 ***************************************************
 
-![GitHub Logo](ML/Rplot19.png)
+![GitHub Logo](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png)
 
 
 
