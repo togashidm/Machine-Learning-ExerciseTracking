@@ -31,8 +31,7 @@ The volunteers were male participants aged between 20-28 years. They performed o
 
 ###Exploratory Data analysis:
 
-####1.	Download the data from a provided URL.
-
+**1.	Download the data from a provided URL.**
 ```R
     fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
     download.file(fileUrl, destfile="./pml-training.csv")
@@ -40,14 +39,13 @@ The volunteers were male participants aged between 20-28 years. They performed o
     download.file(fileUrl, destfile="./pml-testing.csv")
 ```
 
-####2.	Load to R Global environment the files from their respective folders.
-
+**2.	Load to R Global environment the files from their respective folders.**
+```R
     pml.training <- read.csv("pml-training.csv",header=TRUE, na.strings=c("","NA","#DIV/0!"))
     pml.testing  <- read.csv("pml-testing.csv", header=TRUE, na.strings=c("","NA","#DIV/0!"))
-
-####3.	Take a look at the data and analyse the data structure
-
-    str(pml.training)
+```
+**3.	Take a look at the data and analyse the data structure**
+```str(pml.training)```
     
 Raw data variables for each sensor per location recorded as follow:
 *   Triaxial accelerometer:  3 (x,y,z) x 4 (locations) = 12
