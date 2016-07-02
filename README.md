@@ -33,10 +33,12 @@ The volunteers were male participants aged between 20-28 years. They performed o
 
 ####1.	Download the data from a provided URL.
 
-``` fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
-    download.file(fileUrl, destfile="./pml-training.csv") 
+```R
+    fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+    download.file(fileUrl, destfile="./pml-training.csv")
     fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
-    download.file(fileUrl, destfile="./pml-testing.csv")```
+    download.file(fileUrl, destfile="./pml-testing.csv")
+```
 
 ####2.	Load to R Global environment the files from their respective folders.
 
