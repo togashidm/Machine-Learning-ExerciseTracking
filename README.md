@@ -3,7 +3,7 @@ Practical Machine Learning Course Project Assigment
 
 ***************************************************
 
-![Alt text](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png "test")
+![alt text](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png "test")
 
 
 
