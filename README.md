@@ -3,6 +3,12 @@ Practical Machine Learning Course Project Assigment
 
 ***************************************************
 
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png">
+  <b>Figure 1 - Variable Importance</b><br>
+  </p>
+
 ![alt text](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png "test")
 
 
