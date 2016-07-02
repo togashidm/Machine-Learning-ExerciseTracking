@@ -17,28 +17,26 @@ As part of the Coursera assessment, the report described here are restricted to 
 ###Experiment description: 
 Six (6) volunteers weared four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location. The four locations were:
 
-1. glove
-2. armband
-3. lumbar belt
-4. dumbbell 
+*   glove
+*   armband
+*   lumbar belt
+*   dumbbell 
 
-The volunteers, then, performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes":
-- Class A - The rigth exercise (i.e., exactly according to the specification)
-- Class B - Throwing the elbows to the front (i.e., wrong)
-- Class C - Lifting the dumbbell only halfway (i.e., wrong)
-- Class D - Lowering the dumbbell only halfway (i.e., wrong)
-- Class E - Throwing the hips to the front (i.e., wrong).
-
-The volunteers were male participants aged between 20-28 years and data were collected at a constant rate of 45Hz.
+The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way and the others in wrong way:
+- Class A - The rigth exercise (*i.e*., exactly according to the specification)
+- Class B - Throwing the elbows to the front
+- Class C - Lifting the dumbbell only halfway 
+- Class D - Lowering the dumbbell only halfway
+- Class E - Throwing the hips to the front
 
 ###Exploratory Data analysis:
 
 ####1.	Download the data from a provided URL.
 
-    fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
-    download.file(fileUrl, destfile="./pml-training.csv") 
-    fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
-    download.file(fileUrl, destfile="./pml-testing.csv") 
+``` fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+download.file(fileUrl, destfile="./pml-training.csv") 
+fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+download.file(fileUrl, destfile="./pml-testing.csv")```
 
 ####2.	Load to R Global environment the files from their respective folders.
 
