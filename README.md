@@ -73,40 +73,52 @@ str(pml.training, list.len=20)
 ```
 
 Raw data variables for each sensor per location recorded as follow:
-*   Triaxial accelerometer---------------> 3 (x,y,z) x 4 (locations) = 12
-*   Triaxial gyroscope-------------------> 3 (x,y,z) x 4 (locations) = 12 
-*   Triaxial  magnetometer---------------> 3 (x,y,z) x 4 (locations) = 12
+
+*   Triaxial accelerometer:
+    -   3 (x,y,z) x 4 (locations) = 12  
+*   Triaxial gyroscope:
+    -   3 (x,y,z) x 4 (locations) = 12  
+*   Triaxial  magnetometer:
+    -   3 (x,y,z) x 4 (locations) = 12  
 
 A total of 36 raw data variables were then recorded.
 
 It was recorded also "fusion" variables obtained form the raw data variables:
-*   Three Rotational angles (roll, pitch, yaw) per location:     3  x 4 (locations) = 12
-*   Total acceleration per location:                             1  x 4 (locations) = 4
+*   Three Rotational angles (roll, pitch, yaw) per location:
+    -   3  x 4 (locations) = 12
+*   Total acceleration per location:
+    -   1  x 4 (locations) = 4
 
-Inside the Razor IMU, the data of accelerometer, magnetometer and gyroscope are "fused" by using a Direction Cosine Matrix (DCM) algorithm. Therefored, a total of 16 "fused" variables were then recorded.
-Also, for some of "fused" variables, the following "stat" (or descriptive statistics) variables were recorded:
-*   Max, Min, standard deviation(stddev), variance(var), average(avg) of rotational angles:     5 x 12 = 60      
-*   Amplitude of rotational angles (amplitude):                                                 3 x 4  = 12
-*   kurtosis and skewness of rotational angles:                                                 2 x 12 = 24
-*   variance(var) of total acceleration:                                                        1 x 4  = 4
+The data of accelerometer, magnetometer and gyroscope are "fused" by using a Direction Cosine Matrix (DCM) algorithm in the Razor IMU, that means a total of 16 "fused" variables are recorded. Furthermore, in some of "fused" variables, the following *descriptive statistics* variables ("stat") were recorded:
+*   Max, Min, standard deviation(stddev), variance(var), average(avg) of rotational angles:
+    -   5 x 12 = 60      
+*   Amplitude of rotational angles (amplitude):
+    -   3 x 4  = 12
+*   kurtosis and skewness of rotational angles:
+    -   2 x 12 = 24
+*   variance(var) of total acceleration:
+    -   1 x 4  = 4
+
 A total of 100 "stat" variables.
 
-Other variables:
+The remainder variables:
 *   Volunteer ID (user_name)
 *   Exercise type (class)
 *   Index or observable number (X)
 *   time & date (cvtd_timestamp)
-*   4 time variables (raw_timestample_part_1 & raw_timestample_part_1, new_window, num_window)
-A total of 8 other variables
+*   Four (4) time variables (raw_timestample_part_1 & raw_timestample_part_1, new_window, num_window);
 
-Finally, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) variables.
+A total of 8 remainder variables
+
+In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) variables.
+
 Each individual performed 5 "classes" of exercises. Each exercise was repeat 10 times. All together derived a total of 19642 recorded observables, which were then split by Coursera into two files:
 *  train set to create the Model loaded as "pml.training" is a dataframe of 19622 x 160 
 *  test set to answer the Quiz loaded as "pml.testing"  is a dataframe of 20 x 160
 
-####4.  Clean the data by considering the rules of tidy data, and labelling the variables with descriptive names.
-Cleaning the non-alphanumeric characters, and using CamelCase structure
-
+**4.  Data Cleaning**
+The data was cleaned and the variables re-labelled by using *CamelCase* structure.
+```R
     temp=names(pml.training)
     temp=gsub("^a","A",temp); temp=gsub("^c","C",temp); temp=gsub("^c","C",temp); temp=gsub("^g","G",temp); 
     temp=gsub("^k","K",temp); temp=gsub("^m","M",temp); temp=gsub("^n","N",temp); temp=gsub("^p","P",temp);
@@ -117,39 +129,51 @@ Cleaning the non-alphanumeric characters, and using CamelCase structure
     temp=gsub("_r","R",temp); temp=gsub("_s","S",temp); temp=gsub("_t","T",temp); temp=gsub("_u","U",temp);
     temp=gsub("_v","V",temp); temp=gsub("_x","X",temp); temp=gsub("_y","Y",temp); temp=gsub("_w","W",temp);
     temp=gsub("_z","Z",temp); temp=gsub("_1","1",temp); temp=gsub("_2","2",temp);
-
     TidyData = pml.training
     colnames(TidyData) = temp
-
-There are missing values (i.e. 'NA') in the data. We can check if the proportion is relevant by:
-
+```
+Also, form the data structure we observed that there are missing values ("NA") in the data. We can check if the proportion is relevant by 
+```R
     mean(is.na(TidyData))
-
-Over 61% of the data is missed and this is very significant. So, we can set a threshold to remove variables that contain more than 95% of 'NA', for example:
-
+    [1] 0.6131835
+```
+Over 61% of the data is missed, which is a very significant proportion. So, we can set a threshold to remove variables that contain more than 95% of "NA", for example:
+```R
     NewTidyData1 = TidyData[, colSums(is.na(TidyData))/nrow(TidyData) < 0.95]
     dim(NewTidyData1)
-    mean(is.na(NewTidyData))
-
-The NewTidyData now does not contain any missed value. Note that some over variables that were removed may contain observable values. So, we can create a second data set of the remainder of first data set (varibles with less than 95% of 'NA') but without observables that contain "NA": 
-
-    temp= TidyData[, colSums(is.na(TidyData))/nrow(TidyData) > 0.95]
-
-It is also possible that there are variables AND observables that only have 'NA', so:
-
-    NewTidyData2 = temp[, colSums(is.na(temp))/nrow(temp) != 1]
-    NewTidyData2 = na.omit(NewTidyData2)
-    dim(NewTidyData2)
-
-What are the variables that does not contain any observable values?
-
-    setdiff(names(temp),names(NewTidyData2))
+    [1] 19622    60
     
-####5.	Now we are going to take a look at the structure of the NewTidyData1
+    mean(is.na(NewTidyData1))
+    [1] 0
+```
+The `NewTidyData1` now does not contain any missed value. The first 20 rows of data structure of the `NewTidyData1`:
+```R
+ str(NewTidyData1, list.len=20)
+'data.frame':	19622 obs. of  60 variables:
+ $ X                 : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ UserName          : Factor w/ 6 levels "adelmo","carlitos",..: 2 2 2 2 2 2 2 2 2 2 ...
+ $ RawTimestampPart1 : int  1323084231 1323084231 1323084231 1323084232 1323084232 1323084232 1323084232 1323084232 1323084232 1323084232 ...
+ $ RawTimestampPart2 : int  788290 808298 820366 120339 196328 304277 368296 440390 484323 484434 ...
+ $ CvtdTimestamp     : Factor w/ 20 levels "02/12/2011 13:32",..: 9 9 9 9 9 9 9 9 9 9 ...
+ $ NewWindow         : Factor w/ 2 levels "no","yes": 1 1 1 1 1 1 1 1 1 1 ...
+ $ NumWindow         : int  11 11 11 12 12 12 12 12 12 12 ...
+ $ RollBelt          : num  1.41 1.41 1.42 1.48 1.48 1.45 1.42 1.42 1.43 1.45 ...
+ $ PitchBelt         : num  8.07 8.07 8.07 8.05 8.07 8.06 8.09 8.13 8.16 8.17 ...
+ $ YawBelt           : num  -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 ...
+ $ TotalAccelBelt    : int  3 3 3 3 3 3 3 3 3 3 ...
+ $ GyrosBeltX        : num  0 0.02 0 0.02 0.02 0.02 0.02 0.02 0.02 0.03 ...
+ $ GyrosBeltY        : num  0 0 0 0 0.02 0 0 0 0 0 ...
+ $ GyrosBeltZ        : num  -0.02 -0.02 -0.02 -0.03 -0.02 -0.02 -0.02 -0.02 -0.02 0 ...
+ $ AccelBeltX        : int  -21 -22 -20 -22 -21 -21 -22 -22 -20 -21 ...
+ $ AccelBeltY        : int  4 4 5 3 2 4 3 4 2 4 ...
+ $ AccelBeltZ        : int  22 22 23 21 24 21 21 21 24 22 ...
+ $ MagnetBeltX       : int  -3 -7 -2 -6 -6 0 -4 -2 1 -3 ...
+ $ MagnetBeltY       : int  599 608 600 604 600 603 599 603 602 609 ...
+ $ MagnetBeltZ       : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
+  [list output truncated]    
+```
 
-    str(NewTidyData1)
-
-There are a total of 60 variables. We can still reduce the number of variables *assuming* that the prediction is not time and individual dependent. Then, variables such as: "UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp",      "NewWindow" and "NumWindow" can be removed together with the index "X" variable. Therefore, the number of variables is reduced to 53.
+From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **_assuming_** that the prediction is not time and individual dependent. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable. Therefore, the number of variables is reduced to 53.
 
     library(dplyr)
     SelectData = select(NewTidyData1,-c(X:NumWindow))
