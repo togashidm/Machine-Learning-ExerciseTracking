@@ -4,15 +4,6 @@ Practical Machine Learning Course Project Assigment
 ***************************************************
 
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png">
-  <b>Figure 1 - </b>Variable Importance</b><br>
-  </p>
-
-![alt text](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png "test")
-
-
-
 ###Summary:
 Nowadays, to improve the life quality more and more peole are practicing sports. The practicing not only improve the body physical conditions or fitness but also decrease the likehood of many ills related to sedentarism, such as heart diseases. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercises when are done in the wrong way, they are, on one hand, less effective. On the other hand they can be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
 This project is based on the work made by Veloso et al. "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedbacking the user at real-time; increasing the likewood of the exercise effectiviness. 
@@ -1317,3 +1308,11 @@ impVar = as.data.frame(varImp(modelFit2, scale=TRUE)[1])
 a = cbind(Variables = rownames(impVar),impVar)
 impVarOrd = arrange(a,desc(Overall))
 write.csv(b,"varImp_modelFit2.csv")
+
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png">
+  <b>Figure 1 - </b>Variable Importance</b><br>
+  </p>
+
+![alt text](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png "test")
