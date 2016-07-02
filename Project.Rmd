@@ -1,5 +1,15 @@
-# Course-Project
-Practical Machine Learning Course Project Assigment
+---
+title: "Project Assigment - Pratical Machine Learning"
+author: "DT"
+date: "1 July 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
 
 ***************************************************
 
@@ -138,11 +148,11 @@ There are a total of 60 variables. We can still reduce the number of variables *
 ####6.	Propose Machine learning models base on the exploratory data 
 
 I have applied the caret package in this. Caret stands for Classification And REgression Training. It is a great toolkit for building classification models and regression models. Caret also provides means for:
-– Data preparation
-– Data splitting
+- Data preparation
+- Data splitting
 - Training a Model
-– Model evaluation
-– Variable selection
+- Model evaluation
+- Variable selection
 
 #####Data Preparation - Removing redudant variables by a correlation matrix:
 The data variables may be correlated to each other, which it may lead to rendundancy in the model. By using "findCorrelation" from the Caret R package, we can obtain the correlation matrix of between the data variables, and remove those variables with correlation coefficient larger than 0.9 (arbitrary threshold).
@@ -1307,3 +1317,21 @@ impVar = as.data.frame(varImp(modelFit2, scale=TRUE)[1])
 a = cbind(Variables = rownames(impVar),impVar)
 impVarOrd = arrange(a,desc(Overall))
 write.csv(b,"varImp_modelFit2.csv")
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=TRUE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
