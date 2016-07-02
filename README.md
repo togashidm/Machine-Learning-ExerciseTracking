@@ -73,9 +73,12 @@ str(pml.training, list.len=20)
 ```
 
 Raw data variables for each sensor per location recorded as follow:
-*   Triaxial accelerometer:  3 (x,y,z) x 4 (locations) = 12
-*   Triaxial gyroscope:      3 (x,y,z) x 4 (locations) = 12 
-*   Triaxial  magnetometer:  3 (x,y,z) x 4 (locations) = 12 
+*   Triaxial accelerometer:
+    +    3 (x,y,z) x 4 (locations) = 12
+*   Triaxial gyroscope:
+    +    3 (x,y,z) x 4 (locations) = 12 
+*   Triaxial  magnetometer:
+    +    3 (x,y,z) x 4 (locations) = 12 
 A total of 36 raw data variables were then recorded.
 
 It was recorded also "fusion" variables obtained form the raw data variables:
