@@ -32,6 +32,7 @@ The volunteers were male participants aged between 20-28 years. They performed o
 ###Exploratory Data analysis:
 
 **1.	Download the data from a provided URL.**
+
 ```R
     fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
     download.file(fileUrl, destfile="./pml-training.csv")
@@ -40,11 +41,13 @@ The volunteers were male participants aged between 20-28 years. They performed o
 ```
 
 **2.	Load to R Global environment the files from their respective folders.**
+
 ```R
     pml.training <- read.csv("pml-training.csv",header=TRUE, na.strings=c("","NA","#DIV/0!"))
     pml.testing  <- read.csv("pml-testing.csv", header=TRUE, na.strings=c("","NA","#DIV/0!"))
 ```
 **3.	Take a look at the data and analyse the data structure**
+
 ```R
 str(pml.training, list.len=20)
 
@@ -73,7 +76,6 @@ str(pml.training, list.len=20)
 ```
 
 Raw data variables for each sensor per location recorded as follow:
-
 *   Triaxial accelerometer:
     -   3 (x,y,z) x 4 (locations) = 12  
 *   Triaxial gyroscope:
@@ -108,8 +110,7 @@ The remainder variables:
 *   time & date (cvtd_timestamp)
 *   Four (4) time variables (raw_timestample_part_1 & raw_timestample_part_1, new_window, num_window);
 
-A total of 8 remainder variables
-
+A total of 8 remainder variables.
 In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) variables.
 
 Each individual performed 5 "classes" of exercises. Each exercise was repeat 10 times. All together derived a total of 19642 recorded observables, which were then split by Coursera into two files:
@@ -117,6 +118,7 @@ Each individual performed 5 "classes" of exercises. Each exercise was repeat 10 
 *  test set to answer the Quiz loaded as "pml.testing"  is a dataframe of 20 x 160
 
 **4.  Data Cleaning**
+
 The data was cleaned and the variables re-labelled by using *CamelCase* structure.
 ```R
     temp=names(pml.training)
@@ -172,7 +174,6 @@ The `NewTidyData1` now does not contain any missed value. The first 20 rows of d
  $ MagnetBeltZ       : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
   [list output truncated]    
 ```
-
 From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **_assuming_** that the prediction is not time and individual dependent. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
 ```R
     library(dplyr)
@@ -182,7 +183,8 @@ From the initial 160, there are a total of 60 variables. We can still reduce the
 ```
 Therefore, the number of variables is reduced to 53.
 
-**6.	Propose Machine learning models base on the exploratory data** 
+**5.	Propose Machine learning models base on the exploratory data**
+
 I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for:
 (i)   Data preparation
 (ii)  Data splitting
@@ -190,7 +192,8 @@ I used the *caret* package in this work. Caret stands for Classification And REg
 (iv)  Model evaluation
 (v)   Variable selection
 
-**i) Data Preparation - _*Removing redudant variables by a correlation matrix*_**
+**i) Data Preparation - Removing redudant variables by a correlation matrix**
+
 The data variables may be correlated to each other, which it may lead to rendundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables, and remove those variables with correlation coefficient larger than 0.90 (arbitrary threshold).
 ```R
     library(caret)
@@ -206,6 +209,7 @@ The data variables may be correlated to each other, which it may lead to rendund
     [1] 19622    46
 ```
 **ii) Data spliting**
+
 The *caret* function `createDataPartition` is used to randomly split the data set. I set the standard proportion of 60% of the data to be used for model training and 40% used for testing model performance.
 ```R
     library("caret")
@@ -224,9 +228,9 @@ The *caret* function `createDataPartition` is used to randomly split the data se
     modelFit2 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
 ```
 ** iii) Training a Model/Tuning Parameters/Building the Final model**
+
 As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling (cross-validation) need to be opted. 
 Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap resampling. I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
-
 
 Using correlation to reduce number of variable and eliminating UserName
 
