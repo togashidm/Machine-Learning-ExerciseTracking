@@ -227,16 +227,15 @@ The *caret* function `createDataPartition` is used to randomly split the data se
     testData <- SelectData2[-inTrain,]
     modelFit2 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
 ```
-** iii) Training a Model/Tuning Parameters/Building the Final model**
+**iii) Training a Model/Tuning Parameters/Building the Final model**
 
 As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling (cross-validation) need to be opted. 
 Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap resampling. I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
 
 Using correlation to reduce number of variable and eliminating UserName
 
-> modelFit2
-    Random Forest 
-
+```R
+    modelFit2
     11776 samples
     45 predictor
     5 classes: 'A', 'B', 'C', 'D', 'E' 
@@ -297,11 +296,10 @@ No. of variables tried at each split: 23
     MagnetForearmZ       15.57
     TotalAccelBelt       15.14
     YawArm               14.18
+```
 
--------------------------------------------------
-
-#####Model Evaluation
-
+**iv) Model Evaluation**
+```R
     testPred <- predict(modelFit2, newdata = testData)
     confusionMatrix(testData$Classe,testPred)
 
@@ -336,6 +334,7 @@ No. of variables tried at each split: 23
     Detection Rate         0.2845   0.1918   0.1735   0.1607   0.1828
     Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
     Balanced Accuracy      0.9989   0.9967   0.9876   0.9957   0.9987
+```
 
 ####### after model fit
 
