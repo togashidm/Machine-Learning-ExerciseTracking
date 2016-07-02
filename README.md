@@ -1,20 +1,20 @@
-# Course-Project
-Practical Machine Learning Course Project Assigment
+# How well are we doing our Physical exercise?
 
 ***************************************************
+
+
 ###Summary:
 Nowadays, to improve the life quality more and more peole are practicing sports. The practicing not only improve the body physical conditions or fitness but also decrease the likehood of many ills related to sedentarism, such as heart diseases. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercises when are done in the wrong way, they are, on one hand, less effective. On the other hand they can be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
 This project is based on the work made by Veloso et al. "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedbacking the user at real-time; increasing the likewood of the exercise effectiviness. 
 
-###Scope:
-As part of the Coursera assessment, the work described here are restricted to answer the followings:
+> Scope:
+As part of the Coursera assessment, the report described here are restricted to answer the followings:
 
-1.  To predict the manner in which the exercise was done.
-2.  To create a report describing how a proposed model was built (this present document).
-3.  To show how cross validation was implemented
-4.  To analyse the sample error.
-5.  To discuss the assumptions made.
-6.  To apply the proposed model to predict 20 different test cases.
+*   Predict the manner in which the exercise was done.
+*   Show how cross validation was implemented
+*   Analyse the sample error.
+*   Discuss the assumptions made.
+*   Apply the proposed model to predict 20 different test cases.
 
 ###Experiment description: 
 Six (6) volunteers weared four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location. The four locations were:
@@ -32,7 +32,6 @@ The volunteers, then, performed one set of 10 repetitions of the activity "Unila
 - Class E - Throwing the hips to the front (i.e., wrong).
 
 The volunteers were male participants aged between 20-28 years and data were collected at a constant rate of 45Hz.
-
 
 ###Exploratory Data analysis:
 
@@ -137,11 +136,11 @@ There are a total of 60 variables. We can still reduce the number of variables *
 ####6.	Propose Machine learning models base on the exploratory data 
 
 I have applied the caret package in this. Caret stands for Classification And REgression Training. It is a great toolkit for building classification models and regression models. Caret also provides means for:
-- Data preparation
-- Data splitting
+– Data preparation
+– Data splitting
 - Training a Model
-- Model evaluation
-- Variable selection
+– Model evaluation
+– Variable selection
 
 #####Data Preparation - Removing redudant variables by a correlation matrix:
 The data variables may be correlated to each other, which it may lead to rendundancy in the model. By using "findCorrelation" from the Caret R package, we can obtain the correlation matrix of between the data variables, and remove those variables with correlation coefficient larger than 0.9 (arbitrary threshold).
@@ -1306,6 +1305,7 @@ impVar = as.data.frame(varImp(modelFit2, scale=TRUE)[1])
 a = cbind(Variables = rownames(impVar),impVar)
 impVarOrd = arrange(a,desc(Overall))
 write.csv(b,"varImp_modelFit2.csv")
+
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png">
