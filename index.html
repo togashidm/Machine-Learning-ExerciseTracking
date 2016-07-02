@@ -194,9 +194,8 @@ This project is based on the work made by Veloso et al. "Qualitative Activity Re
 <li>  Four (4) time variables (raw_timestample_part_1 &amp; raw_timestample_part_1, new_window, num_window);</li>
 </ul>
 
-<p>A total of 8 remainder variables</p>
-
-<p>In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) variables.</p>
+<p>A total of 8 remainder variables.
+In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) variables.</p>
 
 <p>Each individual performed 5 "classes" of exercises. Each exercise was repeat 10 times. All together derived a total of 19642 recorded observables, which were then split by Coursera into two files:</p>
 
@@ -205,8 +204,9 @@ This project is based on the work made by Veloso et al. "Qualitative Activity Re
 <li> test set to answer the Quiz loaded as "pml.testing"  is a dataframe of 20 x 160</li>
 </ul>
 
-<p><strong>4.  Data Cleaning</strong>
-The data was cleaned and the variables re-labelled by using <em>CamelCase</em> structure.</p>
+<p><strong>4.  Data Cleaning</strong></p>
+
+<p>The data was cleaned and the variables re-labelled by using <em>CamelCase</em> structure.</p>
 
 <div class="highlight highlight-source-r"><pre>    <span class="pl-v">temp</span><span class="pl-k">=</span>names(<span class="pl-smi">pml.training</span>)
     <span class="pl-v">temp</span><span class="pl-k">=</span>gsub(<span class="pl-s"><span class="pl-pds">"</span>^a<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>A<span class="pl-pds">"</span></span>,<span class="pl-smi">temp</span>); <span class="pl-v">temp</span><span class="pl-k">=</span>gsub(<span class="pl-s"><span class="pl-pds">"</span>^c<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>C<span class="pl-pds">"</span></span>,<span class="pl-smi">temp</span>); <span class="pl-v">temp</span><span class="pl-k">=</span>gsub(<span class="pl-s"><span class="pl-pds">"</span>^c<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>C<span class="pl-pds">"</span></span>,<span class="pl-smi">temp</span>); <span class="pl-v">temp</span><span class="pl-k">=</span>gsub(<span class="pl-s"><span class="pl-pds">"</span>^g<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>G<span class="pl-pds">"</span></span>,<span class="pl-smi">temp</span>); 
@@ -270,16 +270,18 @@ The data was cleaned and the variables re-labelled by using <em>CamelCase</em> s
 
 <p>Therefore, the number of variables is reduced to 53.</p>
 
-<p><strong>6.    Propose Machine learning models base on the exploratory data</strong> 
-I used the <em>caret</em> package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for:
+<p><strong>5.    Propose Machine learning models base on the exploratory data</strong></p>
+
+<p>I used the <em>caret</em> package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for:
 (i)   Data preparation
 (ii)  Data splitting
 (iii) Training a Model
 (iv)  Model evaluation
 (v)   Variable selection</p>
 
-<p><strong>i) Data Preparation - <em><em>Removing redudant variables by a correlation matrix</em></em></strong>
-The data variables may be correlated to each other, which it may lead to rendundancy in the model (<em><em>assumption</em></em>). By using <code>findCorrelation</code> from the <em>caret</em> package, we can obtain the correlation matrix of between the data variables, and remove those variables with correlation coefficient larger than 0.90 (arbitrary threshold).</p>
+<p><strong>i) Data Preparation - Removing redudant variables by a correlation matrix</strong></p>
+
+<p>The data variables may be correlated to each other, which it may lead to rendundancy in the model (<em><em>assumption</em></em>). By using <code>findCorrelation</code> from the <em>caret</em> package, we can obtain the correlation matrix of between the data variables, and remove those variables with correlation coefficient larger than 0.90 (arbitrary threshold).</p>
 
 <div class="highlight highlight-source-r"><pre>    library(<span class="pl-smi">caret</span>)
     <span class="pl-smi">threshold</span>   <span class="pl-k">&lt;-</span>  <span class="pl-c1">0.90</span>
@@ -293,8 +295,9 @@ The data variables may be correlated to each other, which it may lead to rendund
     dim(<span class="pl-smi">SelectData2</span>)
     [<span class="pl-c1">1</span>] <span class="pl-c1">19622</span>    <span class="pl-c1">46</span></pre></div>
 
-<p><strong>ii) Data spliting</strong>
-The <em>caret</em> function <code>createDataPartition</code> is used to randomly split the data set. I set the standard proportion of 60% of the data to be used for model training and 40% used for testing model performance.</p>
+<p><strong>ii) Data spliting</strong></p>
+
+<p>The <em>caret</em> function <code>createDataPartition</code> is used to randomly split the data set. I set the standard proportion of 60% of the data to be used for model training and 40% used for testing model performance.</p>
 
 <div class="highlight highlight-source-r"><pre>    library(<span class="pl-s"><span class="pl-pds">"</span>caret<span class="pl-pds">"</span></span>)
     library(<span class="pl-s"><span class="pl-pds">"</span>e1071<span class="pl-pds">"</span></span>)
@@ -311,122 +314,111 @@ The <em>caret</em> function <code>createDataPartition</code> is used to randomly
     <span class="pl-smi">testData</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">SelectData2</span>[<span class="pl-k">-</span><span class="pl-smi">inTrain</span>,]
     <span class="pl-v">modelFit2</span> <span class="pl-k">=</span> train(<span class="pl-smi">Classe</span> <span class="pl-k">~</span>., <span class="pl-v">data</span><span class="pl-k">=</span><span class="pl-smi">trainData</span>, <span class="pl-v">method</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>rf<span class="pl-pds">"</span></span>, <span class="pl-v">prox</span><span class="pl-k">=</span><span class="pl-c1">TRUE</span>)</pre></div>
 
-<p>** iii) Training a Model/Tuning Parameters/Building the Final model**
-As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling (cross-validation) need to be opted. 
+<p><strong>iii) Training a Model/Tuning Parameters/Building the Final model</strong></p>
+
+<p>As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling (cross-validation) need to be opted. 
 Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap resampling. I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret <code>train</code> function automatically chooses the best tuning parameters associated to the model.</p>
 
 <p>Using correlation to reduce number of variable and eliminating UserName</p>
 
-<blockquote>
-<p>modelFit2
-    Random Forest </p>
-</blockquote>
+<div class="highlight highlight-source-r"><pre>    <span class="pl-smi">modelFit2</span>
+    <span class="pl-c1">11776</span> <span class="pl-smi">samples</span>
+    <span class="pl-c1">45</span> <span class="pl-smi">predictor</span>
+    <span class="pl-c1">5</span> <span class="pl-smi">classes</span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>A<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>B<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>C<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>D<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>E<span class="pl-pds">'</span></span> 
 
-<pre><code>11776 samples
-45 predictor
-5 classes: 'A', 'B', 'C', 'D', 'E' 
+    <span class="pl-smi">No</span> <span class="pl-smi">pre</span><span class="pl-k">-</span><span class="pl-smi">processing</span>
+    <span class="pl-smi">Resampling</span><span class="pl-k">:</span> Bootstrapped (<span class="pl-c1">25</span> <span class="pl-smi">reps</span>) 
+    <span class="pl-smi">Summary</span> <span class="pl-smi">of</span> <span class="pl-smi">sample</span> <span class="pl-smi">sizes</span><span class="pl-k">:</span> <span class="pl-c1">11776</span>, <span class="pl-c1">11776</span>, <span class="pl-c1">11776</span>, <span class="pl-c1">11776</span>, <span class="pl-c1">11776</span>, <span class="pl-c1">11776</span>, <span class="pl-k">...</span> 
+    <span class="pl-smi">Resampling</span> <span class="pl-smi">results</span> <span class="pl-smi">across</span> <span class="pl-smi">tuning</span> <span class="pl-smi">parameters</span><span class="pl-k">:</span>
 
-No pre-processing
-Resampling: Bootstrapped (25 reps) 
-Summary of sample sizes: 11776, 11776, 11776, 11776, 11776, 11776, ... 
-Resampling results across tuning parameters:
+    <span class="pl-smi">mtry</span>  <span class="pl-smi">Accuracy</span>   <span class="pl-smi">Kappa</span>    
+    <span class="pl-c1">2</span>    <span class="pl-c1">0.9856378</span>  <span class="pl-c1">0.9818241</span>
+    <span class="pl-c1">23</span>    <span class="pl-c1">0.9874277</span>  <span class="pl-c1">0.9840903</span>
+    <span class="pl-c1">45</span>    <span class="pl-c1">0.9752460</span>  <span class="pl-c1">0.9686771</span>
 
-mtry  Accuracy   Kappa    
-2    0.9856378  0.9818241
-23    0.9874277  0.9840903
-45    0.9752460  0.9686771
+    <span class="pl-smi">Accuracy</span> <span class="pl-smi">was</span> <span class="pl-smi">used</span> <span class="pl-smi">to</span> <span class="pl-smi">select</span> <span class="pl-smi">the</span> <span class="pl-smi">optimal</span> <span class="pl-smi">model</span> <span class="pl-smi">using</span>  <span class="pl-smi">the</span> <span class="pl-smi">largest</span> <span class="pl-smi">value</span>.
+    <span class="pl-smi">The</span> <span class="pl-smi">final</span> <span class="pl-smi">value</span> <span class="pl-smi">used</span> <span class="pl-k">for</span> <span class="pl-smi">the</span> <span class="pl-smi">model</span> <span class="pl-smi">was</span> <span class="pl-v">mtry</span> <span class="pl-k">=</span> <span class="pl-c1">23</span>. 
 
-Accuracy was used to select the optimal model using  the largest value.
-The final value used for the model was mtry = 23. 
-</code></pre>
+<span class="pl-k">&gt;</span> <span class="pl-smi">modelFit2</span><span class="pl-k">$</span><span class="pl-smi">finalModel</span>
 
-<blockquote>
-<p>modelFit2$finalModel</p>
-</blockquote>
+<span class="pl-smi">Call</span><span class="pl-k">:</span>
+ randomForest(<span class="pl-v">x</span> <span class="pl-k">=</span> <span class="pl-smi">x</span>, <span class="pl-v">y</span> <span class="pl-k">=</span> <span class="pl-smi">y</span>, <span class="pl-v">mtry</span> <span class="pl-k">=</span> <span class="pl-smi">param</span><span class="pl-k">$</span><span class="pl-smi">mtry</span>, <span class="pl-v">proximity</span> <span class="pl-k">=</span> <span class="pl-c1">TRUE</span>) 
+               <span class="pl-smi">Type</span> <span class="pl-smi">of</span> <span class="pl-smi">random</span> <span class="pl-smi">forest</span><span class="pl-k">:</span> <span class="pl-smi">classification</span>
+                     <span class="pl-smi">Number</span> <span class="pl-smi">of</span> <span class="pl-smi">trees</span><span class="pl-k">:</span> <span class="pl-c1">500</span>
+<span class="pl-smi">No</span>. <span class="pl-smi">of</span> <span class="pl-smi">variables</span> <span class="pl-smi">tried</span> <span class="pl-smi">at</span> <span class="pl-smi">each</span> <span class="pl-smi">split</span><span class="pl-k">:</span> <span class="pl-c1">23</span>
 
-<p>Call:
- randomForest(x = x, y = y, mtry = param$mtry, proximity = TRUE) 
-               Type of random forest: classification
-                     Number of trees: 500
-No. of variables tried at each split: 23</p>
+        <span class="pl-smi">OOB</span> <span class="pl-smi">estimate</span> <span class="pl-smi">of</span>  <span class="pl-smi">error</span> <span class="pl-smi">rate</span><span class="pl-k">:</span> <span class="pl-c1">0.91</span>%
+    <span class="pl-smi">Confusion</span> <span class="pl-smi">matrix</span><span class="pl-k">:</span>
+         <span class="pl-smi">A</span>    <span class="pl-smi">B</span>    <span class="pl-smi">C</span>    <span class="pl-smi">D</span>    <span class="pl-smi">E</span>    <span class="pl-smi">class.error</span>
+    <span class="pl-smi">A</span> <span class="pl-c1">3338</span>    <span class="pl-c1">6</span>    <span class="pl-c1">1</span>    <span class="pl-c1">1</span>    <span class="pl-c1">2</span>  <span class="pl-c1">0.002986858</span>
+    <span class="pl-smi">B</span>   <span class="pl-c1">22</span> <span class="pl-c1">2243</span>   <span class="pl-c1">14</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>  <span class="pl-c1">0.015796402</span>
+    <span class="pl-smi">C</span>    <span class="pl-c1">0</span>   <span class="pl-c1">14</span> <span class="pl-c1">2031</span>    <span class="pl-c1">9</span>    <span class="pl-c1">0</span>  <span class="pl-c1">0.011197663</span>
+    <span class="pl-smi">D</span>    <span class="pl-c1">1</span>    <span class="pl-c1">0</span>   <span class="pl-c1">25</span> <span class="pl-c1">1903</span>    <span class="pl-c1">1</span>  <span class="pl-c1">0.013989637</span>
+    <span class="pl-smi">E</span>    <span class="pl-c1">0</span>    <span class="pl-c1">1</span>    <span class="pl-c1">2</span>    <span class="pl-c1">8</span> <span class="pl-c1">2154</span>  <span class="pl-c1">0.005080831</span>
 
-<pre><code>    OOB estimate of  error rate: 0.91%
-Confusion matrix:
-     A    B    C    D    E    class.error
-A 3338    6    1    1    2  0.002986858
-B   22 2243   14    0    0  0.015796402
-C    0   14 2031    9    0  0.011197663
-D    1    0   25 1903    1  0.013989637
-E    0    1    2    8 2154  0.005080831
+    varImp(<span class="pl-smi">modelFit2</span>, <span class="pl-v">scale</span><span class="pl-k">=</span><span class="pl-c1">TRUE</span>)
+    <span class="pl-smi">rf</span> <span class="pl-smi">variable</span> <span class="pl-smi">importance</span>
 
-varImp(modelFit2, scale=TRUE)
-rf variable importance
+    <span class="pl-smi">only</span> <span class="pl-c1">20</span> <span class="pl-smi">most</span> <span class="pl-smi">important</span> <span class="pl-smi">variables</span> shown (<span class="pl-smi">out</span> <span class="pl-smi">of</span> <span class="pl-c1">45</span>)
 
-only 20 most important variables shown (out of 45)
+                       <span class="pl-smi">Overall</span>
+    <span class="pl-smi">YawBelt</span>             <span class="pl-c1">100.00</span>
+    <span class="pl-smi">PitchForearm</span>         <span class="pl-c1">86.89</span>
+    <span class="pl-smi">PitchBelt</span>            <span class="pl-c1">71.89</span>
+    <span class="pl-smi">MagnetDumbbellZ</span>      <span class="pl-c1">63.81</span>
+    <span class="pl-smi">MagnetDumbbellY</span>      <span class="pl-c1">51.95</span>
+    <span class="pl-smi">RollForearm</span>          <span class="pl-c1">50.97</span>
+    <span class="pl-smi">MagnetBeltY</span>          <span class="pl-c1">46.42</span>
+    <span class="pl-smi">MagnetBeltZ</span>          <span class="pl-c1">29.86</span>
+    <span class="pl-smi">GyrosBeltZ</span>           <span class="pl-c1">28.77</span>
+    <span class="pl-smi">MagnetDumbbellX</span>      <span class="pl-c1">28.23</span>
+    <span class="pl-smi">AccelDumbbellY</span>       <span class="pl-c1">27.33</span>
+    <span class="pl-smi">RollDumbbell</span>         <span class="pl-c1">27.13</span>
+    <span class="pl-smi">AccelForearmX</span>        <span class="pl-c1">21.55</span>
+    <span class="pl-smi">MagnetBeltX</span>          <span class="pl-c1">19.06</span>
+    <span class="pl-smi">AccelDumbbellZ</span>       <span class="pl-c1">19.02</span>
+    <span class="pl-smi">TotalAccelDumbbell</span>   <span class="pl-c1">18.92</span>
+    <span class="pl-smi">AccelForearmZ</span>        <span class="pl-c1">17.06</span>
+    <span class="pl-smi">MagnetForearmZ</span>       <span class="pl-c1">15.57</span>
+    <span class="pl-smi">TotalAccelBelt</span>       <span class="pl-c1">15.14</span>
+    <span class="pl-smi">YawArm</span>               <span class="pl-c1">14.18</span></pre></div>
 
-                   Overall
-YawBelt             100.00
-PitchForearm         86.89
-PitchBelt            71.89
-MagnetDumbbellZ      63.81
-MagnetDumbbellY      51.95
-RollForearm          50.97
-MagnetBeltY          46.42
-MagnetBeltZ          29.86
-GyrosBeltZ           28.77
-MagnetDumbbellX      28.23
-AccelDumbbellY       27.33
-RollDumbbell         27.13
-AccelForearmX        21.55
-MagnetBeltX          19.06
-AccelDumbbellZ       19.02
-TotalAccelDumbbell   18.92
-AccelForearmZ        17.06
-MagnetForearmZ       15.57
-TotalAccelBelt       15.14
-YawArm               14.18
-</code></pre>
+<p><strong>iv) Model Evaluation</strong></p>
 
-<hr>
+<div class="highlight highlight-source-r"><pre>    <span class="pl-smi">testPred</span> <span class="pl-k">&lt;-</span> predict(<span class="pl-smi">modelFit2</span>, <span class="pl-v">newdata</span> <span class="pl-k">=</span> <span class="pl-smi">testData</span>)
+    confusionMatrix(<span class="pl-smi">testData</span><span class="pl-k">$</span><span class="pl-smi">Classe</span>,<span class="pl-smi">testPred</span>)
 
-<h5>
-<a id="model-evaluation" class="anchor" href="#model-evaluation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Model Evaluation</h5>
+    <span class="pl-smi">Confusion</span> <span class="pl-smi">Matrix</span> <span class="pl-smi">and</span> <span class="pl-smi">Statistics</span>
 
-<pre><code>testPred &lt;- predict(modelFit2, newdata = testData)
-confusionMatrix(testData$Classe,testPred)
+              <span class="pl-smi">Reference</span>
+    <span class="pl-smi">Prediction</span>     <span class="pl-smi">A</span>    <span class="pl-smi">B</span>    <span class="pl-smi">C</span>    <span class="pl-smi">D</span>    <span class="pl-smi">E</span>
+         <span class="pl-smi">A</span>      <span class="pl-c1">2232</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>
+         <span class="pl-smi">B</span>         <span class="pl-c1">5</span> <span class="pl-c1">1505</span>    <span class="pl-c1">8</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>
+         <span class="pl-smi">C</span>         <span class="pl-c1">0</span>    <span class="pl-c1">5</span> <span class="pl-c1">1361</span>    <span class="pl-c1">2</span>    <span class="pl-c1">0</span>
+         <span class="pl-smi">D</span>         <span class="pl-c1">0</span>    <span class="pl-c1">1</span>   <span class="pl-c1">22</span> <span class="pl-c1">1261</span>    <span class="pl-c1">2</span>
+         <span class="pl-smi">E</span>         <span class="pl-c1">0</span>    <span class="pl-c1">1</span>    <span class="pl-c1">3</span>    <span class="pl-c1">4</span> <span class="pl-c1">1434</span>
 
-Confusion Matrix and Statistics
+    <span class="pl-smi">Overall</span> <span class="pl-smi">Statistics</span>
 
-          Reference
-Prediction     A    B    C    D    E
-     A      2232    0    0    0    0
-     B         5 1505    8    0    0
-     C         0    5 1361    2    0
-     D         0    1   22 1261    2
-     E         0    1    3    4 1434
+               <span class="pl-smi">Accuracy</span> <span class="pl-k">:</span> <span class="pl-c1">0.9932</span>          
+                 <span class="pl-c1">95</span>% <span class="pl-smi">CI</span> <span class="pl-k">:</span> (<span class="pl-c1">0.9912</span>, <span class="pl-c1">0.9949</span>)
+    <span class="pl-smi">No</span> <span class="pl-smi">Information</span> <span class="pl-smi">Rate</span> <span class="pl-k">:</span> <span class="pl-c1">0.2851</span>          
+    <span class="pl-smi">P</span><span class="pl-k">-</span><span class="pl-smi">Value</span> [<span class="pl-smi">Acc</span> <span class="pl-k">&gt;</span> <span class="pl-smi">NIR</span>] <span class="pl-k">:</span> <span class="pl-k">&lt;</span> <span class="pl-c1">2.2e-16</span>       
 
-Overall Statistics
-
-           Accuracy : 0.9932          
-             95% CI : (0.9912, 0.9949)
-No Information Rate : 0.2851          
-P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-
-              Kappa : 0.9915          
-Mcnemar's Test P-Value : NA              
-
-Statistics by Class:
-
-                     Class: A Class: B Class: C Class: D Class: E
-Sensitivity            0.9978   0.9954   0.9763   0.9953   0.9986
-Specificity            1.0000   0.9979   0.9989   0.9962   0.9988
-Pos Pred Value         1.0000   0.9914   0.9949   0.9806   0.9945
-Neg Pred Value         0.9991   0.9989   0.9949   0.9991   0.9997
-Prevalence             0.2851   0.1927   0.1777   0.1615   0.1830
-Detection Rate         0.2845   0.1918   0.1735   0.1607   0.1828
-Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
-Balanced Accuracy      0.9989   0.9967   0.9876   0.9957   0.9987
-</code></pre>
+                  <span class="pl-smi">Kappa</span> <span class="pl-k">:</span> <span class="pl-c1">0.9915</span>          
+    <span class="pl-smi">Mcnemar</span><span class="pl-s"><span class="pl-pds">'</span>s Test P-Value : NA              </span>
+<span class="pl-s"></span>
+<span class="pl-s">    Statistics by Class:</span>
+<span class="pl-s"></span>
+<span class="pl-s">                         Class: A Class: B Class: C Class: D Class: E</span>
+<span class="pl-s">    Sensitivity            0.9978   0.9954   0.9763   0.9953   0.9986</span>
+<span class="pl-s">    Specificity            1.0000   0.9979   0.9989   0.9962   0.9988</span>
+<span class="pl-s">    Pos Pred Value         1.0000   0.9914   0.9949   0.9806   0.9945</span>
+<span class="pl-s">    Neg Pred Value         0.9991   0.9989   0.9949   0.9991   0.9997</span>
+<span class="pl-s">    Prevalence             0.2851   0.1927   0.1777   0.1615   0.1830</span>
+<span class="pl-s">    Detection Rate         0.2845   0.1918   0.1735   0.1607   0.1828</span>
+<span class="pl-s">    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838</span>
+<span class="pl-s">    Balanced Accuracy      0.9989   0.9967   0.9876   0.9957   0.9987</span></pre></div>
 
 <h6>
 <a id="-after-model-fit" class="anchor" href="#-after-model-fit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a># after model fit</h6>
