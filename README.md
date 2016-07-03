@@ -197,6 +197,8 @@ From the initial 160, there are a total of 60 variables. We can still reduce the
 ```
 Therefore, the number of variables is reduced to 53.
 
+###Model Building
+
 **5.	Propose Machine learning models base on the exploratory data**
 
 I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.
@@ -243,12 +245,10 @@ The *caret* function `createDataPartition` is used to randomly split the data se
     trainData <- SelectData2[inTrain,]
     testData <- SelectData2[-inTrain,]
 ```
-**5.3.  Training a Model/Tuning Parameters/Building the Final model**
+**5.3.  Training a Model/Tuning Parameters/Variable Selection**
 
-As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling (cross-validation) need to be opted. 
-Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap resampling.
+As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling need to be opted. Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap (**default**) resampling. Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
 
-I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
 ```R
     set.seed(3023)
     modelFit2 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
@@ -273,7 +273,7 @@ I worked with two type of resampling to evaluate the performance: Bootstrap (def
     Accuracy was used to select the optimal model using  the largest value.
     The final value used for the model was mtry = 23. 
 ```
-Accuracy is the default metric selected to be optimized in `train()` for categorical variables, in this case, "Classe". The proposed model show that 23 predictors were need to get the best accuracy on the training set. This number of predictor is then used in the final model. The "out-of-bag" (OOB) error rate of the final model can be obtained by:
+Accuracy is the default metric selected to be optimized in `train()` for categorical variables, in this case, "Classe". The proposed model show that 23 predictors were need to get the best accuracy on the training set. In order words, `caret` has optimised the model and concluded that selecting 23 most important predictors gives the best accuracy. The "out-of-bag" (OOB) error rate of the final model can be obtained by:
 
 ```R
 modelFit2$finalModel
@@ -349,8 +349,11 @@ However the better error estimates is obtained by using the testing set (as I sh
     MagnetForearmY       7.14137478
     MagnetForearmZ      15.57428210
 ```
-We can also get the plot of the variable importance by `plot(varImp(modelFit2, scale=TRUE))`. See Figure 2.
-
+We can also get the plot of the variable importance sorted in descendent order by `plot(varImp(modelFit2, scale=TRUE))`. See Figure 2.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Fig2.png">
+  <b>Figure 2 - </b>Variable Importance</b><br>
+  </p>
 
 **5.4.    Model Evaluation**
 The evalution of the training fit model can be made by using the caret `predict()`function on the testing set:
@@ -395,93 +398,103 @@ Now we can compare the prediction result of the testing set with the actual valu
     Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
     Balanced Accuracy      0.9989   0.9967   0.9876   0.9957   0.9987
 ```
+Therefore the accuray estimated for the model fit is 0.9932 which means that the estimation error is ca. 0.68%.
 
-####### after model fit
+###Model Parameters Effect:
+1.  Selecting variables by Variable importance ranking:
 
+I tried to improve the model by changing the number of predictors. Based on the previous results, I reduced more the number of variables by creating a cutoff point for the best variables by their importance:
+
+```R
+    library(dplyr)
     temp =varImp(modelFit2, scale=TRUE)
     temp.df =as.data.frame(temp[[1]])
     temp.df = cbind(Variables = rownames(temp.df),temp.df)
-    ####temp.df = arrange(temp.df,desc(Overall))
-    ####filtering to variables with importance > 10%
-    Impvar.names = as.vector(filter(temp.df, Overall > 10)[,1])
+    Impvar.names = as.vector(filter(temp.df, Overall > 10)[,1])     #filtering to variables with importance > 10%#
+    Impvar.names
+```
+```R
+    [1] "PitchBelt"          "YawBelt"            "TotalAccelBelt"     "GyrosBeltZ"        
+    [5] "MagnetBeltX"        "MagnetBeltY"        "MagnetBeltZ"        "RollArm"           
+    [9] "YawArm"             "RollDumbbell"       "YawDumbbell"        "TotalAccelDumbbell"
+    [13] "GyrosDumbbellY"     "AccelDumbbellY"     "AccelDumbbellZ"     "MagnetDumbbellX"   
+    [17] "MagnetDumbbellY"    "MagnetDumbbellZ"    "RollForearm"        "PitchForearm"      
+    [21] "AccelForearmX"      "AccelForearmZ"      "MagnetForearmZ"  
+```
+```R
     selectVar = c(Impvar.names,"Classe")
-        
-    > Impvar.names
-         [1] "PitchBelt"          "YawBelt"            "TotalAccelBelt"     "GyrosBeltZ"        
-         [5] "MagnetBeltX"        "MagnetBeltY"        "MagnetBeltZ"        "RollArm"           
-         [9] "YawArm"             "RollDumbbell"       "YawDumbbell"        "TotalAccelDumbbell"
-        [13] "GyrosDumbbellY"     "AccelDumbbellY"     "AccelDumbbellZ"     "MagnetDumbbellX"   
-        [17] "MagnetDumbbellY"    "MagnetDumbbellZ"    "RollForearm"        "PitchForearm"      
-        [21] "AccelForearmX"      "AccelForearmZ"      "MagnetForearmZ"  
-        
     trainDataImp = trainData[,Impvar.names]
     modelFit2a = train(Classe ~., data=trainDataImp, method="rf", prox=TRUE)
-    date()
+```
+```R
+    modelFit2a = train(Classe ~., data=trainDataImp, method="rf", prox=TRUE)
+    modelFit2a
+```
+```R
+    Random Forest 
         
-    [1] "Tue Jun 28 23:19:44 2016"
-    > modelFit2a = train(Classe ~., data=trainDataImp, method="rf", prox=TRUE)
-    There were 50 or more warnings (use warnings() to see the first 50)
-    >   date()
-    [1] "Wed Jun 29 05:33:39 2016"
-    >   save.image("~/machinelearning4.RData")
-    >   modelFit2a
-        Random Forest 
+    11776 samples
+       23 predictor
+        5 classes: 'A', 'B', 'C', 'D', 'E' 
         
-        11776 samples
-           23 predictor
-            5 classes: 'A', 'B', 'C', 'D', 'E' 
+    No pre-processing
+    Resampling: Bootstrapped (25 reps) 
+    Summary of sample sizes: 11776, 11776, 11776, 11776, 11776, 11776, ... 
+    Resampling results across tuning parameters:
         
-        No pre-processing
-        Resampling: Bootstrapped (25 reps) 
-        Summary of sample sizes: 11776, 11776, 11776, 11776, 11776, 11776, ... 
-        Resampling results across tuning parameters:
+      mtry  Accuracy   Kappa    
+       2    0.9815209  0.9765947
+      12    0.9816863  0.9768206
+      23    0.9697268  0.9616665
         
-          mtry  Accuracy   Kappa    
-           2    0.9815209  0.9765947
-          12    0.9816863  0.9768206
-          23    0.9697268  0.9616665
+    Accuracy was used to select the optimal model using  the largest value.
+    The final value used for the model was mtry = 12.
+```
+```R
+   modelFit2a$finalModel
+```
+```R
+    Call:
+    randomForest(x = x, y = y, mtry = param$mtry, proximity = TRUE) 
+                   Type of random forest: classification
+                         Number of trees: 500
+    No. of variables tried at each split: 12
         
-        Accuracy was used to select the optimal model using  the largest value.
-        The final value used for the model was mtry = 12. 
+            OOB estimate of  error rate: 1.07%
+    Confusion matrix:
+         A    B    C    D    E class.error
+    A 3337    7    1    1    2 0.003285544
+    B   22 2230   24    1    2 0.021500658
+    C    0   15 2021   18    0 0.016066212
+    D    1    1   19 1907    2 0.011917098
+    E    0    1    3    6 2155 0.004618938
+```
+
+```R
+    testPred <- predict(modelFit2a, newdata = testData)
+    confusionMatrix(testData$Classe,testPred)
+```
+
+```R
+    Confusion Matrix and Statistics
         
-    >   modelFit2a$finalModel
+              Reference
+    Prediction    A    B    C    D    E
+             A 2231    1    0    0    0
+             B    5 1499   13    1    0
+             C    0    4 1355    9    0
+             D    0    1   21 1260    4
+             E    0    0    3    5 1434
         
-        Call:
-        randomForest(x = x, y = y, mtry = param$mtry, proximity = TRUE) 
-                       Type of random forest: classification
-                             Number of trees: 500
-        No. of variables tried at each split: 12
-        
-                OOB estimate of  error rate: 1.07%
-        Confusion matrix:
-             A    B    C    D    E class.error
-        A 3337    7    1    1    2 0.003285544
-        B   22 2230   24    1    2 0.021500658
-        C    0   15 2021   18    0 0.016066212
-        D    1    1   19 1907    2 0.011917098
-        E    0    1    3    6 2155 0.004618938
-        
-        > testPred <- predict(modelFit2a, newdata = testData)
-        > confusionMatrix(testData$Classe,testPred)
-        Confusion Matrix and Statistics
-        
-                  Reference
-        Prediction    A    B    C    D    E
-                 A 2231    1    0    0    0
-                 B    5 1499   13    1    0
-                 C    0    4 1355    9    0
-                 D    0    1   21 1260    4
-                 E    0    0    3    5 1434
-        
-        Overall Statistics
+    Overall Statistics
                                                   
-                       Accuracy : 0.9915          
-                         95% CI : (0.9892, 0.9934)
-            No Information Rate : 0.285           
-            P-Value [Acc > NIR] : < 2.2e-16       
+                   Accuracy : 0.9915          
+                     95% CI : (0.9892, 0.9934)
+        No Information Rate : 0.285           
+        P-Value [Acc > NIR] : < 2.2e-16       
                                                   
-                          Kappa : 0.9892          
-         Mcnemar's Test P-Value : NA              
+                      Kappa : 0.9892          
+        Mcnemar's Test P-Value : NA              
         
         Statistics by Class:
         
@@ -494,424 +507,35 @@ Now we can compare the prediction result of the testing set with the actual valu
         Detection Rate         0.2843   0.1911   0.1727   0.1606   0.1828
         Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
         Balanced Accuracy      0.9988   0.9965   0.9857   0.9921   0.9980
-        
--------------------------------------------------------------
+```        
+In this trial, the number of predictors selected in the final model was again decreased to 12. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poor than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). 
 
+2. Change the number of trees
+We can obtain the relationship model error of classification and number of trees in the "Random Forest" model by:
+```R
+    library(reshape)
+    df.melted <- melt(modelFit2$finalModel$err.rate, id = "ntree")
+    names(df.melted) = c('ntree','Classe','Error')
+    ggplot(data = df.melted, aes(x = ntree, y = Error, color = Classe)) 
+    +   geom_line(size=1)
+```    
+ <p align="center">
+  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Fig3.png">
+  <b>Figure 3 - </b>Random Forest Model Error per #tree</b><br>
+  </p>
 
-For the train function, the possible resampling methods (cross-validatios) are:
+We can see in Figure 3 that the error in all of them stablised early than ntree=500 (default). So, I decided to try a model fit with ntree=200.
+```R
+    date()
+    modelFit2h = train(Classe ~., data=trainData, method="rf", ntree=200, prox=TRUE)
+    modelFit2h
+    date()
+```
+ 
+ 
+I also worked with 10-fold cross-validation (k=10). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
 
-* bootstrapping,
-* k-fold cross-validation,
-* leave-one-out cross-validation,
-* leave-group-out cross-validation (i.e., repeated splits without replacement).
-
-#######using k-fold CV 
-In this work two cross-validations will be evaluated: Boststrapping and k-fold cross-validation
-
-#######Predictor importance
-The generic function varImp can be used to characterize the general selection of predictors on
-the model. The varImp function works with the following object classes: lm, mars, earth,
-randomForest, gbm, mvr (in the pls package), rpart, RandomForest (from the party package),
-pamrtrained, bagEarth, bagFDA, classbagg and regbagg. varImp also works with objects
-produced by train, but this is a simple wrapper for the specic models previously listed
-
-    date()
-    set.seed(2825)
-    fitControl <- trainControl( method = "cv", number = 10)
-    modelFit2b <- train(Classe ~ ., data = trainDataImp, method="rf", ntree=200, trControl = fitControl)
-    date()
-    > date()
-    [1] "Wed Jun 29 19:38:18 2016"
-    > set.seed(2825)
-    > fitControl <- trainControl( method = "cv", number = 10)
-    > modelFit2b <- train(Classe ~ ., data = trainDataImp, method="rf", ntree=200, trControl = fitControl)
-    > date()
-    [1] "Wed Jun 29 19:44:06 2016"
-    > 
-    > modelFit2b
-    Random Forest 
-    
-    11776 samples
-       23 predictor
-        5 classes: 'A', 'B', 'C', 'D', 'E' 
-    
-    No pre-processing
-    Resampling: Cross-Validated (10 fold) 
-    Summary of sample sizes: 10598, 10599, 10599, 10597, 10598, 10598, ... 
-    Resampling results across tuning parameters:
-    
-      mtry  Accuracy   Kappa    
-       2    0.9866676  0.9831335
-      12    0.9871779  0.9837805
-      23    0.9774111  0.9714243
-    
-    Accuracy was used to select the optimal model using  the largest value.
-    The final value used for the model was mtry = 12. 
-    
-    
-    
-    > plot(modelFit2b$finalModel)
-    > plot(modelFit2b)
-    > testPred <- predict(modelFit2b, newdata = testData)
-    > confusionMatrix(testData$Classe,testPred)
-    Confusion Matrix and Statistics
-    
-              Reference
-    Prediction    A    B    C    D    E
-             A 2230    2    0    0    0
-             B    6 1495   16    1    0
-             C    0    4 1354   10    0
-             D    0    0   20 1263    3
-             E    0    0    5    5 1432
-    
-    Overall Statistics
-                                              
-                   Accuracy : 0.9908          
-                     95% CI : (0.9885, 0.9928)
-        No Information Rate : 0.285           
-        P-Value [Acc > NIR] : < 2.2e-16       
-                                              
-                      Kappa : 0.9884          
-     Mcnemar's Test P-Value : NA              
-    
-    Statistics by Class:
-    
-                         Class: A Class: B Class: C Class: D Class: E
-    Sensitivity            0.9973   0.9960   0.9706   0.9875   0.9979
-    Specificity            0.9996   0.9964   0.9978   0.9965   0.9984
-    Pos Pred Value         0.9991   0.9848   0.9898   0.9821   0.9931
-    Neg Pred Value         0.9989   0.9991   0.9937   0.9976   0.9995
-    Prevalence             0.2850   0.1913   0.1778   0.1630   0.1829
-    Detection Rate         0.2842   0.1905   0.1726   0.1610   0.1825
-    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
-    Balanced Accuracy      0.9985   0.9962   0.9842   0.9920   0.9982
-    
-    
-    > date()
-    [1] "Wed Jun 29 19:38:18 2016"
-    > set.seed(2825)
-    > fitControl <- trainControl( method = "cv", number = 10)
-    > modelFit2b <- train(Classe ~ ., data = trainDataImp, method="rf", ntree=200, trControl = fitControl)
-    > date()
-    [1] "Wed Jun 29 19:44:06 2016"
-    > 
-    > modelFit2b
-    Random Forest 
-    
-    11776 samples
-       23 predictor
-        5 classes: 'A', 'B', 'C', 'D', 'E' 
-    
-    No pre-processing
-    Resampling: Cross-Validated (10 fold) 
-    Summary of sample sizes: 10598, 10599, 10599, 10597, 10598, 10598, ... 
-    Resampling results across tuning parameters:
-    
-      mtry  Accuracy   Kappa    
-       2    0.9866676  0.9831335
-      12    0.9871779  0.9837805
-      23    0.9774111  0.9714243
-    
-    Accuracy was used to select the optimal model using  the largest value.
-    The final value used for the model was mtry = 12. 
-    > plot(modelFit2b$finalModel)
-    > plot(modelFit2b)
-    > testPred <- predict(modelFit2b, newdata = testData)
-    > confusionMatrix(testData$Classe,testPred)
-    Confusion Matrix and Statistics
-    
-              Reference
-    Prediction    A    B    C    D    E
-             A 2230    2    0    0    0
-             B    6 1495   16    1    0
-             C    0    4 1354   10    0
-             D    0    0   20 1263    3
-             E    0    0    5    5 1432
-    
-    Overall Statistics
-                                              
-                   Accuracy : 0.9908          
-                     95% CI : (0.9885, 0.9928)
-        No Information Rate : 0.285           
-        P-Value [Acc > NIR] : < 2.2e-16       
-                                              
-                      Kappa : 0.9884          
-     Mcnemar's Test P-Value : NA              
-    
-    Statistics by Class:
-    
-                         Class: A Class: B Class: C Class: D Class: E
-    Sensitivity            0.9973   0.9960   0.9706   0.9875   0.9979
-    Specificity            0.9996   0.9964   0.9978   0.9965   0.9984
-    Pos Pred Value         0.9991   0.9848   0.9898   0.9821   0.9931
-    Neg Pred Value         0.9989   0.9991   0.9937   0.9976   0.9995
-    Prevalence             0.2850   0.1913   0.1778   0.1630   0.1829
-    Detection Rate         0.2842   0.1905   0.1726   0.1610   0.1825
-    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
-    Balanced Accuracy      0.9985   0.9962   0.9842   0.9920   0.9982
-    
-    Call:
-     randomForest(x = x, y = y, ntree = 200, mtry = param$mtry) 
-                   Type of random forest: classification
-                         Number of trees: 200
-    No. of variables tried at each split: 12
-    
-            OOB estimate of  error rate: 1.26%
-    Confusion matrix:
-         A    B    C    D    E class.error
-    A 3328   14    2    2    2 0.005973716
-    B   24 2230   23    1    1 0.021500658
-    C    0   20 2016   18    0 0.018500487
-    D    1    0   20 1902    7 0.014507772
-    E    0    0    3   10 2152 0.006004619
-    
-    > date()
-    [1] "Wed Jun 29 20:01:57 2016"
-    > set.seed(1825)
-    > fitControl <- trainControl( method = "cv", number = 10)
-    > modelFit2c <- train(Classe ~ ., data = trainDataImp, method="rf", trControl = fitControl)
-    > date()
-    [1] "Wed Jun 29 20:19:25 2016"
-    > 
-    > modelFit2c
-    Random Forest 
-    
-    11776 samples
-       23 predictor
-        5 classes: 'A', 'B', 'C', 'D', 'E' 
-    
-    No pre-processing
-    Resampling: Cross-Validated (10 fold) 
-    Summary of sample sizes: 10598, 10598, 10599, 10599, 10598, 10598, ... 
-    Resampling results across tuning parameters:
-    
-      mtry  Accuracy   Kappa    
-       2    0.9862432  0.9825951
-      12    0.9872615  0.9838864
-      23    0.9783446  0.9726068
-    
-    Accuracy was used to select the optimal model using  the largest value.
-    The final value used for the model was mtry = 12. 
-    > plot(modelFit2c$finalModel)
-    > plot(modelFit2c)
-    > testPred <- predict(modelFit2c, newdata = testData)
-    > confusionMatrix(testData$Classe,testPred)
-    Confusion Matrix and Statistics
-    
-              Reference
-    Prediction    A    B    C    D    E
-             A 2231    1    0    0    0
-             B    7 1498   13    0    0
-             C    0    4 1354   10    0
-             D    0    2   18 1263    3
-             E    0    1    4    3 1434
-    
-    Overall Statistics
-                                              
-                   Accuracy : 0.9916          
-                     95% CI : (0.9893, 0.9935)
-        No Information Rate : 0.2852          
-        P-Value [Acc > NIR] : < 2.2e-16       
-                                              
-                      Kappa : 0.9894          
-     Mcnemar's Test P-Value : NA              
-    
-    Statistics by Class:
-    
-                         Class: A Class: B Class: C Class: D Class: E
-    Sensitivity            0.9969   0.9947   0.9748   0.9898   0.9979
-    Specificity            0.9998   0.9968   0.9978   0.9965   0.9988
-    Pos Pred Value         0.9996   0.9868   0.9898   0.9821   0.9945
-    Neg Pred Value         0.9988   0.9987   0.9946   0.9980   0.9995
-    Prevalence             0.2852   0.1919   0.1770   0.1626   0.1832
-    Detection Rate         0.2843   0.1909   0.1726   0.1610   0.1828
-    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
-    Balanced Accuracy      0.9983   0.9958   0.9863   0.9932   0.9983
-    
-    > (modelFit2c$finalModel)
-    
-    Call:
-     randomForest(x = x, y = y, mtry = param$mtry) 
-                   Type of random forest: classification
-                         Number of trees: 500
-    No. of variables tried at each split: 12
-    
-            OOB estimate of  error rate: 1.14%
-    Confusion matrix:
-         A    B    C    D    E class.error
-    A 3335    9    1    1    2 0.003882915
-    B   24 2231   24    0    0 0.021061869
-    C    0   21 2017   16    0 0.018013632
-    D    1    1   18 1908    2 0.011398964
-    E    0    1    4    9 2151 0.006466513
-    
-    
-    date()
-    set.seed(1325)
-    fitControl <- trainControl( method = "cv", number = 3)
-    modelFit2d <- train(Classe ~ ., data = trainDataImp, method="rf", trControl = fitControl)
-    date()
-    > date()
-    [1] "Wed Jun 29 21:14:59 2016"
-    > set.seed(1325)
-    > fitControl <- trainControl( method = "cv", number = 3)
-    > modelFit2d <- train(Classe ~ ., data = trainDataImp, method="rf", trControl = fitControl)
-    > date()
-    [1] "Wed Jun 29 21:18:30 2016"
-    > 
-    > modelFit2d
-    Random Forest 
-    
-    11776 samples
-       23 predictor
-        5 classes: 'A', 'B', 'C', 'D', 'E' 
-    
-    No pre-processing
-    Resampling: Cross-Validated (3 fold) 
-    Summary of sample sizes: 7852, 7851, 7849 
-    Resampling results across tuning parameters:
-    
-      mtry  Accuracy   Kappa    
-       2    0.9825917  0.9779763
-      12    0.9838655  0.9795928
-      23    0.9737600  0.9668130
-    
-    Accuracy was used to select the optimal model using  the largest value.
-    The final value used for the model was mtry = 12. 
-    > modelFit2d$finalModel
-    
-    Call:
-     randomForest(x = x, y = y, mtry = param$mtry) 
-                   Type of random forest: classification
-                         Number of trees: 500
-    No. of variables tried at each split: 12
-    
-            OOB estimate of  error rate: 1.1%
-    Confusion matrix:
-         A    B    C    D    E class.error
-    A 3336    8    1    1    2 0.003584229
-    B   23 2230   24    1    1 0.021500658
-    C    0   17 2024   13    0 0.014605648
-    D    0    2   20 1905    3 0.012953368
-    E    0    2    3    8 2152 0.006004619
-    > testPred <- predict(modelFit2d, newdata = testData)
-    > confusionMatrix(testData$Classe,testPred)
-    Confusion Matrix and Statistics
-    
-              Reference
-    Prediction    A    B    C    D    E
-             A 2231    1    0    0    0
-             B    6 1500   12    0    0
-             C    0    4 1354   10    0
-             D    0    2   20 1260    4
-             E    0    1    5    4 1432
-    
-    Overall Statistics
-                                              
-                   Accuracy : 0.9912          
-                     95% CI : (0.9889, 0.9932)
-        No Information Rate : 0.2851          
-        P-Value [Acc > NIR] : < 2.2e-16       
-                                              
-                      Kappa : 0.9889          
-     Mcnemar's Test P-Value : NA              
-    
-    Statistics by Class:
-    
-                         Class: A Class: B Class: C Class: D Class: E
-    Sensitivity            0.9973   0.9947   0.9734   0.9890   0.9972
-    Specificity            0.9998   0.9972   0.9978   0.9960   0.9984
-    Pos Pred Value         0.9996   0.9881   0.9898   0.9798   0.9931
-    Neg Pred Value         0.9989   0.9987   0.9943   0.9979   0.9994
-    Prevalence             0.2851   0.1922   0.1773   0.1624   0.1830
-    Detection Rate         0.2843   0.1912   0.1726   0.1606   0.1825
-    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
-    Balanced Accuracy      0.9986   0.9959   0.9856   0.9925   0.9978
-    
-    
-    date()
-    set.seed(1025)
-    fitControl <- trainControl( method = "cv", number = 20)
-    modelFit2e <- train(Classe ~ ., data = trainDataImp, method="rf", trControl = fitControl)
-    date()
-    > date()
-    [1] "Wed Jun 29 21:23:51 2016"
-    > set.seed(1025)
-    > fitControl <- trainControl( method = "cv", number = 20)
-    > modelFit2e <- train(Classe ~ ., data = trainDataImp, method="rf", trControl = fitControl)
-    > date()
-    [1] "Wed Jun 29 21:56:27 2016"
-    > 
-    > modelFit2e
-    Random Forest 
-    
-    11776 samples
-       23 predictor
-        5 classes: 'A', 'B', 'C', 'D', 'E' 
-    
-    No pre-processing
-    Resampling: Cross-Validated (20 fold) 
-    Summary of sample sizes: 11188, 11186, 11187, 11187, 11188, 11187, ... 
-    Resampling results across tuning parameters:
-    
-      mtry  Accuracy   Kappa    
-       2    0.9873475  0.9839927
-      12    0.9881950  0.9850679
-      23    0.9790233  0.9734655
-    
-    Accuracy was used to select the optimal model using  the largest value.
-    The final value used for the model was mtry = 12. 
-    > modelFit2e$finalModel
-    
-    Call:
-     randomForest(x = x, y = y, mtry = param$mtry) 
-                   Type of random forest: classification
-                         Number of trees: 500
-    No. of variables tried at each split: 12
-    
-            OOB estimate of  error rate: 1.1%
-    Confusion matrix:
-         A    B    C    D    E class.error
-    A 3336    7    1    2    2 0.003584229
-    B   23 2231   25    0    0 0.021061869
-    C    0   19 2019   16    0 0.017039922
-    D    1    2   19 1906    2 0.012435233
-    E    0    0    3    8 2154 0.005080831
-    
-    > testPred <- predict(modelFit2e, newdata = testData)
-    > confusionMatrix(testData$Classe,testPred)
-    Confusion Matrix and Statistics
-    
-              Reference
-    Prediction    A    B    C    D    E
-             A 2232    0    0    0    0
-             B    7 1494   16    1    0
-             C    0    5 1353   10    0
-             D    0    2   20 1260    4
-             E    0    1    4    4 1433
-    
-    Overall Statistics
-                                              
-                   Accuracy : 0.9906          
-                     95% CI : (0.9882, 0.9926)
-        No Information Rate : 0.2854          
-        P-Value [Acc > NIR] : < 2.2e-16       
-                                              
-                      Kappa : 0.9881          
-     Mcnemar's Test P-Value : NA              
-    
-    Statistics by Class:
-    
-                         Class: A Class: B Class: C Class: D Class: E
-    Sensitivity            0.9969   0.9947   0.9713   0.9882   0.9972
-    Specificity            1.0000   0.9962   0.9977   0.9960   0.9986
-    Pos Pred Value         1.0000   0.9842   0.9890   0.9798   0.9938
-    Neg Pred Value         0.9988   0.9987   0.9938   0.9977   0.9994
-    Prevalence             0.2854   0.1914   0.1775   0.1625   0.1832
-    Detection Rate         0.2845   0.1904   0.1724   0.1606   0.1826
-    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
-    Balanced Accuracy      0.9984   0.9954   0.9845   0.9921   0.9979
-    
+```R
     date()
     set.seed(10025)
     fitControl <- trainControl( method = "cv", number = 10)
@@ -996,128 +620,6 @@ produced by train, but this is a simple wrapper for the specic models previousl
     Balanced Accuracy      0.9987   0.9972   0.9867   0.9957   0.9987
     > save.image("~/machinelearning5.RData")
     
-    
-    
-    install.packages("doParallel")
-    library(parallel)
-    library(doParallel)
-    cluster <- makeCluster(detectCores() - 1) # convention to leave 1 core for OS
-    registerDoParallel(cluster)
-    
-    date()
-    set.seed(12025)
-    fitControl <- trainControl(method = "repeatedcv", number = 10, repeats=10, allowParallel = TRUE)
-    modelFit2g <- train(Classe ~ ., data = trainData, method="rf", trControl = fitControl)
-    stopCluster(cluster)
-    date()
-    
-     cluster <- makeCluster(detectCores() - 1) # convention to leave 1 core for OS
-    > registerDoParallel(cluster)
-    > date()
-    [1] "Wed Jun 29 23:11:05 2016"
-    > set.seed(12025)
-    > fitControl <- trainControl(method = "repeatedcv", number = 10, repeats=10, allowParallel = TRUE)
-    > modelFit2g <- train(Classe ~ ., data = trainData, method="rf", trControl = fitControl)
-    Warning messages:
-    1: closing unused connection 8 (<-MobilePC:11421) 
-    2: closing unused connection 7 (<-MobilePC:11421) 
-    3: closing unused connection 6 (<-MobilePC:11421) 
-    > stopCluster(cluster)
-    > date()
-    [1] "Thu Jun 30 02:00:46 2016"
-    > save.image("~/machinelearning5.RData")
-    > modelFit2g
-    Random Forest 
-    
-    11776 samples
-       45 predictor
-        5 classes: 'A', 'B', 'C', 'D', 'E' 
-    
-    No pre-processing
-    Resampling: Cross-Validated (10 fold, repeated 10 times) 
-    Summary of sample sizes: 10597, 10599, 10598, 10600, 10599, 10597, ... 
-    Resampling results across tuning parameters:
-    
-      mtry  Accuracy   Kappa    
-       2    0.9891898  0.9863233
-      23    0.9903194  0.9877536
-      45    0.9796197  0.9742176
-    
-    Accuracy was used to select the optimal model using  the largest value.
-    The final value used for the model was mtry = 23. 
-    > modelFit2g$finalModel
-    
-    Call:
-     randomForest(x = x, y = y, mtry = param$mtry) 
-                   Type of random forest: classification
-                         Number of trees: 500
-    No. of variables tried at each split: 23
-    
-            OOB estimate of  error rate: 0.87%
-    Confusion matrix:
-         A    B    C    D    E class.error
-    A 3338    7    1    0    2 0.002986858
-    B   24 2243   12    0    0 0.015796402
-    C    0   11 2033   10    0 0.010223953
-    D    1    0   23 1905    1 0.012953368
-    E    0    0    2    8 2155 0.004618938
-    > confusionMatrix(modelFit2g)
-    Cross-Validated (10 fold, repeated 10 times) Confusion Matrix 
-    
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.4  0.2  0.0  0.0  0.0
-             B  0.0 19.0  0.2  0.0  0.0
-             C  0.0  0.1 17.2  0.2  0.0
-             D  0.0  0.0  0.1 16.2  0.1
-             E  0.0  0.0  0.0  0.0 18.3
-                                
-     Accuracy (average) : 0.9903
-    
-    > testPred <- predict(modelFit2g, newdata = testData)
-    > confusionMatrix(testData$Classe,testPred)
-    Confusion Matrix and Statistics
-    
-              Reference
-    Prediction    A    B    C    D    E
-             A 2232    0    0    0    0
-             B    6 1503    9    0    0
-             C    0    5 1360    3    0
-             D    0    0   21 1263    2
-             E    0    1    4    4 1433
-    
-    Overall Statistics
-                                              
-                   Accuracy : 0.993           
-                     95% CI : (0.9909, 0.9947)
-        No Information Rate : 0.2852          
-        P-Value [Acc > NIR] : < 2.2e-16       
-                                              
-                      Kappa : 0.9911          
-     Mcnemar's Test P-Value : NA              
-    
-    Statistics by Class:
-    
-                         Class: A Class: B Class: C Class: D Class: E
-    Sensitivity            0.9973   0.9960   0.9756   0.9945   0.9986
-    Specificity            1.0000   0.9976   0.9988   0.9965   0.9986
-    Pos Pred Value         1.0000   0.9901   0.9942   0.9821   0.9938
-    Neg Pred Value         0.9989   0.9991   0.9948   0.9989   0.9997
-    Prevalence             0.2852   0.1923   0.1777   0.1619   0.1829
-    Detection Rate         0.2845   0.1916   0.1733   0.1610   0.1826
-    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
-    Balanced Accuracy      0.9987   0.9968   0.9872   0.9955   0.9986 
-
-
-
----------
-
-
-Pre-Processing Options
-
-####Validation
 
 
 ###Discussion
@@ -1313,9 +815,4 @@ impVarOrd = arrange(a,desc(Overall))
 write.csv(b,"varImp_modelFit2.csv")
 
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png">
-  <b>Figure 1 - </b>Variable Importance</b><br>
-  </p>
 
-![alt text](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png "test")
