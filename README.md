@@ -2,8 +2,8 @@
 ***************************************************
 
 ###Summary:
-Nowadays, to improve the life quality more and more peole are practicing sports. The practicing not only improve the body physical conditions or fitness but also decrease the likehood of many ills related to sedentarism, such as heart diseases. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercises when are done in the wrong way, they are, on one hand, less effective. On the other hand they can be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
-This project is based on the work made by Veloso *et al.* "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedbacking the user at real-time; increasing the likewood of the exercise effectiviness. 
+Nowadays, to improve the life quality more and more people are practising sports. The practising not only improve the body physical conditions or fitness but also decrease the likelihood of many ills related to sedentary life style, such as heart diseases. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercises when are done in the wrong way, they are, on one hand, less effective. On the other hand they can be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
+This project is based on the work made by Veloso *et al.* "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedback the user at real-time; increasing the likelihood of the exercise effectiveness. 
 
 ###Scope:
 As part of the Coursera assessment, the report described here are restricted to answer the followings:
@@ -15,13 +15,13 @@ As part of the Coursera assessment, the report described here are restricted to 
 *   Apply the proposed model to predict 20 different test cases.
 
 ###Experiment description: 
-Six (6) volunteers weared four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell. 
+Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell. 
 <p align="center">
-<image src="https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png" width="250">
+<image src= "https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png" width="250">
   </p>
 
-The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the rigth way and the others in wrong way:
-- Class A - The rigth exercise (*i.e*., exactly according to the specification)
+The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way and the others in wrong way:
+- Class A - The right exercise (*i.e*., exactly according to the specification)
 - Class B - Throwing the elbows to the front
 - Class C - Lifting the dumbbell only halfway 
 - Class D - Lowering the dumbbell only halfway
@@ -199,12 +199,12 @@ Therefore, the number of variables is reduced to 53.
 
 **5.	Propose Machine learning models base on the exploratory data**
 
-I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.
+I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classification and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.
 
-**5.1.    Data Preparation - Removing redudant variables by a correlation matrix**
+**5.1.    Data Preparation - Removing redundant variables by a correlation matrix**
 
-The data variables may be correlated to each other, which it may lead to rendundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables. The function 
-can plot the the entiry data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.
+The data variables may be correlated to each other, which it may lead to redundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables. The function 
+can plot the the entity data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.
 ```R
     library(caret)
     library(corrplot)
@@ -232,7 +232,7 @@ can plot the the entiry data set to visualise those correlations (See Figure 1).
   <b>Figure 1 - </b>Variables Correlation Map</b><br>
   </p>
 
-**5.2.  Data spliting**
+**5.2.  Data splitting**
 
 The *caret* function `createDataPartition` is used to randomly split the data set. I set the standard proportion of 60% of the data to be used for model training and 40% used for testing model performance.
 ```R
@@ -245,7 +245,7 @@ The *caret* function `createDataPartition` is used to randomly split the data se
 ```
 **5.3.  Training a Model/Tuning Parameters/Variable Selection**
 
-As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling need to be opted. Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap (**default**) resampling. Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
+As the main question of this assignment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are chosen, the type of resampling need to be opted. Caret Package has tools to perform, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap (**default**) resampling. Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
 
 ```R
     set.seed(3023)
@@ -685,7 +685,7 @@ Performing the same calculation but now using the original data set with 46 vari
     Balanced Accuracy      0.9987   0.9972   0.9867   0.9957   0.9987
 ```
 This result is very welcoming because the accuracy is very similar to modelFit2 but the OOB error rate is small (0.86% vs 0.91%). But the most relevant is the modelling time. The CV resampling reduce the time from 5 hours to 30 minutes!
-    > save.image("~/machinelearning5.RData")
+ 
 
 3. Change the number of trees
 
@@ -702,7 +702,7 @@ We can obtain the relationship model error of classification and number of trees
   <b>Figure 3 - </b>Random Forest Model Error per #tree</b><br>
   </p>
 
-We can see in Figure 3 that the error in all of them stablised early than ntree=500 (default). So, by trying a model fit with ntree=200, we have:
+We can see in Figure 3 that the error in all of them stabilised early than ntree=500 (default). So, by trying a model fit with ntree=200, we have:
 ```R
   set.seed(2825)
   fitControl <- trainControl( method = "cv", number = 10)
@@ -831,7 +831,7 @@ Levels: A B C D E
 I have also evaluated the other 4 models:  modelFit2a, modelFit2b, modelFit2c and modelFit2f. These models presented slightly differnce in accuracies and as expected, all gave the same results.
 
 ###Conclusions:
-In this report, it is shown how to download the data, look into it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). It was performed correlations between the variables to reduce the model complexity. The mains assumptions made for the proposed model is to be unpersonal and not time dependent. The initial 160 variables was reduced to 46. Final models shows that only 12 predictors could be used. Also, it was shown how to build a Machine Learning Model by using *caret* package, and how the parameters in the `train()` function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Foreste method, all the models in this work predict the same result in the 20 test cases, that is:
+In this report, it is shown how to download the data, look into it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). It was performed correlations between the variables to reduce the model complexity. The mains assumptions made for the proposed model is to be unperson and not time dependent. The initial 160 variables was reduced to 46. Final models shows that only 12 predictors could be used. Also, it was shown how to build a Machine Learning Model by using *caret* package, and how the parameters in the `train()` function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Forest method, all the models in this work predict the same result in the 20 test cases, that is:
 ```R
   table(predict(modelFit2f, newdata = CaseDataTest))
 ```
