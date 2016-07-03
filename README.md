@@ -192,7 +192,7 @@ I used the *caret* package in this work. Caret stands for Classification And REg
 (iv)  Model evaluation
 (v)   Variable selection
 
-**i) Data Preparation - Removing redudant variables by a correlation matrix**
+5.1.    Data Preparation - Removing redudant variables by a correlation matrix
 
 The data variables may be correlated to each other, which it may lead to rendundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables, and remove those variables with correlation coefficient larger than 0.90 (arbitrary threshold).
 ```R
