@@ -16,7 +16,8 @@ As part of the Coursera assessment, the report described here are restricted to 
 
 ###Experiment description: 
 Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of the Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, each one providing 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell.
-![](https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png")
+![](https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png)
+
 The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way (class A below) and the others the wrong way (classes B to E below):
 - Class A - The right exercise (*i.e*., exactly according to the specification)
 - Class B - Throwing the elbows to the front
@@ -89,7 +90,7 @@ A total of 36 raw data variables were then recorded.
 *   Total acceleration per location:
     -   1  x 4 (locations) = 4
 
-The data froam accelerometer, magnetometer and gyroscope are "fused" by using a Direction Cosine Matrix (DCM) algorithm in the Razor IMU, that means a total of 16 "fused" variables are recorded. Furthermore, in some of the "fused" variables, the following *descriptive statistics* variables ("stat") were recorded:
+The data from accelerometer, magnetometer and gyroscope are "fused" by using a Direction Cosine Matrix (DCM) algorithm in the Razor IMU, that means a total of 16 "fused" variables are recorded. Furthermore, in some of the "fused" variables, the following *descriptive statistics* variables ("stat") were recorded:
 *   Max, Min, standard deviation(stddev), variance(var), average(avg) of rotational angles:
     -   5 x 12 = 60      
 *   Amplitude of rotational angles (amplitude):
@@ -181,7 +182,7 @@ The `NewTidyData1` now does not contain any missing values. The first 20 rows of
  $ MagnetBeltZ       : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
   [list output truncated]    
 ```
-From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **_assuming_** that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercises was performed. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
+From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **assuming** that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercise was performed. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
 ```R
     library(dplyr)
     SelectData = select(NewTidyData1,-c(X:NumWindow))
@@ -201,7 +202,7 @@ I used the *caret* package in this work. Caret stands for Classification And REg
 **5.1.    Data Preparation - Removing redundant variables by a correlation matrix**
 
 The data variables may be correlated to each other, which it may lead to redundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix between the data variables. The function 
-can plot the entity data set to visualise those correlations (See Figure 1).  The plot makes it less difficult to choose the threshold of the correlation coefficient in  order to remove redundant variables. I chose an absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.
+can plot the data set to visualise those correlations (See Figure 1).  The plot makes it less difficult to choose the threshold of the correlation coefficient in  order to remove redundant variables. I chose an absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.
 ```R
     library(caret)
     library(corrplot)
