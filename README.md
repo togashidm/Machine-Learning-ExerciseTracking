@@ -174,7 +174,7 @@ The `NewTidyData1` now does not contain any missed value. The first 20 rows of d
  $ MagnetBeltZ       : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
   [list output truncated]    
 ```
-From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **assuming** that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercise is performed. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
+From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **_assuming_** that the prediction is not time and individual dependent. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
 ```R
     library(dplyr)
     SelectData = select(NewTidyData1,-c(X:NumWindow))
@@ -185,42 +185,62 @@ Therefore, the number of variables is reduced to 53.
 
 **5.	Propose Machine learning models base on the exploratory data**
 
-I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation and Variable selection.
+I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for:
+(i)   Data preparation
+(ii)  Data splitting
+(iii) Training a Model
+(iv)  Model evaluation
+(v)   Variable selection
 
-**5.1.    Data Preparation - Removing redudant variables by a correlation matrix**
+5.1.    Data Preparation - Removing redudant variables by a correlation matrix
 
-The data variables may be correlated to each other, which it may lead to rendundancy in the model (**assumption**). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables, and remove those variables with correlation coefficient larger than 0.90 (arbitrary threshold).
+The data variables may be correlated to each other, which it may lead to rendundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables. The function 
+can plot the the entiry data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped
 ```R
     library(caret)
     threshold   <-  0.90
     corMatrix   <-  cor(SelectData[,1:52])
-    highCor <-  findCorrelation(corMatrix, threshold)
+    corrplot(corMatrix, method="square", order="hclust") # Plot the correlation matrix
+    
+    highCor <-  findCorrelation(corMatrix, threshold) #sub set those that thas correlation >, = 0.9, or < -0.9
     highCorRm   <-  row.names(corMatrix)[highCor]
     highCorRm
-    [1] "AccelBeltZ"    "RollBelt"       "AccelBeltY"     "AccelBeltX"     "GyrosDumbbellX" "GyrosDumbbellZ" "GyrosArmX"
+    [1] "AccelBeltZ"    "RollBelt"       "AccelBeltY"     "AccelBeltX"     
+        "GyrosDumbbellX" "GyrosDumbbellZ"  "GyrosArmX"
 
     SelectData2 <- SelectData[, -highCor]
     dim(SelectData2)
     [1] 19622    46
 ```
-**5.2.  Data spliting**
+<p align="center">
+  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Fig1.png">
+  <b>Figure 1 - </b>Variables Correlation Map</b><br>
+  </p>
+
+![alt text](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png "test")
+**ii) Data spliting**
 
 The *caret* function `createDataPartition` is used to randomly split the data set. I set the standard proportion of 60% of the data to be used for model training and 40% used for testing model performance.
 ```R
     library("caret")
     library("e1071")
+    set.seed(123)
+    inTrain <- createDataPartition(SelectData$Class, p = 0.6, list = FALSE)
+    trainData <- SelectData[inTrain,]
+    testData <- SelectData[-inTrain,]
+    modelFit1 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
+
+    library("caret")
     set.seed(1023)
     inTrain <- createDataPartition(SelectData2$Class, p = 0.6, list = FALSE)
     trainData <- SelectData2[inTrain,]
     testData <- SelectData2[-inTrain,]
     modelFit2 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
 ```
-**5.3.  Training a Model/Tuning Parameters/Building the Final model**
+**iii) Training a Model/Tuning Parameters/Building the Final model**
 
 As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling (cross-validation) need to be opted. 
-Caret Package can do k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap resampling. I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
-
-Boostrap resampling with 46 varibles using the train set took ca. *5 hours* in my Laptop equiped by i3-3217U CPU @ 1.8GHz with 6.0GB (RAM) and R-3.3.1 for Windows. Althougth, the accuracy and error were slightly smaller than Bootstrap, the Cross-validation (once or repeated) resampling took in much less time between 3 to 30 minutes.
+Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap resampling. I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
 
 Using correlation to reduce number of variable and eliminating UserName
 
