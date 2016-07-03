@@ -3,7 +3,7 @@
 
 ###Summary:
 Nowadays, to improve the life quality more and more peole are practicing sports. The practicing not only improve the body physical conditions or fitness but also decrease the likehood of many ills related to sedentarism, such as heart diseases. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercises when are done in the wrong way, they are, on one hand, less effective. On the other hand they can be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
-This project is based on the work made by Veloso et al. "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedbacking the user at real-time; increasing the likewood of the exercise effectiviness. 
+This project is based on the work made by Veloso *et al.* "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedbacking the user at real-time; increasing the likewood of the exercise effectiviness. 
 
 ###Scope:
 As part of the Coursera assessment, the report described here are restricted to answer the followings:
@@ -174,7 +174,7 @@ The `NewTidyData1` now does not contain any missed value. The first 20 rows of d
  $ MagnetBeltZ       : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
   [list output truncated]    
 ```
-From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **_assuming_** that the prediction is not time and individual dependent. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
+From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **_assuming_** that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercised was performed. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
 ```R
     library(dplyr)
     SelectData = select(NewTidyData1,-c(X:NumWindow))
@@ -185,17 +185,12 @@ Therefore, the number of variables is reduced to 53.
 
 **5.	Propose Machine learning models base on the exploratory data**
 
-I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for:
-(i)   Data preparation
-(ii)  Data splitting
-(iii) Training a Model
-(iv)  Model evaluation
-(v)   Variable selection
+I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.
 
 5.1.    Data Preparation - Removing redudant variables by a correlation matrix
 
 The data variables may be correlated to each other, which it may lead to rendundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables. The function 
-can plot the the entiry data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped
+can plot the the entiry data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.
 ```R
     library(caret)
     threshold   <-  0.90
@@ -217,7 +212,6 @@ can plot the the entiry data set to visualise those correlations (See Figure 1).
   <b>Figure 1 - </b>Variables Correlation Map</b><br>
   </p>
 
-![alt text](https://raw.githubusercontent.com/anonymous-1618/ML/master/Rplot19.png "test")
 **ii) Data spliting**
 
 The *caret* function `createDataPartition` is used to randomly split the data set. I set the standard proportion of 60% of the data to be used for model training and 40% used for testing model performance.
