@@ -27,8 +27,8 @@
 <h3>
 <a id="summary" class="anchor" href="#summary" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Summary:</h3>
 
-<p>Nowadays, to improve the life quality more and more people are practising sports. The practising not only improve the body physical conditions or fitness but also decrease the likelihood of many ills related to sedentary life style, such as heart diseases. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercises when are done in the wrong way, they are, on one hand, less effective. On the other hand they can be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
-This project is based on the work made by Veloso <em>et al.</em> "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedback the user at real-time; increasing the likelihood of the exercise effectiveness. </p>
+<p>Nowadays, to improve the quality of life  more and more people are practising sports.Practice not only improves the body's physical condition or fitness but also decreases the likelihood of many ills related to a sedentary life style, such as heart disease. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercise when done in the wrong way, may be less effective. But on the other hand they can also be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
+This project is based on the work made by Veloso <em>et al.</em> "Qualitative Activity Recognition of Weight Lifting Exercises". The authors mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg) weight. Five different ways (where only one is correct) to perform the lifting exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedback to the user in real-time; increasing the likelihood of the exercise effectiveness. </p>
 
 <h3>
 <a id="scope" class="anchor" href="#scope" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scope:</h3>
@@ -46,13 +46,11 @@ This project is based on the work made by Veloso <em>et al.</em> "Qualitative Ac
 <h3>
 <a id="experiment-description" class="anchor" href="#experiment-description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Experiment description:</h3>
 
-<p>Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell. </p>
+<p>Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of the Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, each one providing 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell.</p>
 
-<p align="center">
+<p><img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png" alt=""></p>
 
-  </p>
-
-<p>The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way and the others in wrong way:</p>
+<p>The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way (class A below) and the others the wrong way (classes B to E below):</p>
 
 <ul>
 <li>Class A - The right exercise (<em>i.e</em>., exactly according to the specification)</li>
@@ -105,7 +103,7 @@ This project is based on the work made by Veloso <em>et al.</em> "Qualitative Ac
  <span class="pl-k">$</span> <span class="pl-smi">max_yaw_belt</span>            <span class="pl-k">:</span> <span class="pl-smi">num</span>  <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-c1">NA</span> <span class="pl-k">...</span>
   [<span class="pl-smi">list</span> <span class="pl-smi">output</span> <span class="pl-smi">truncated</span>]</pre></div>
 
-<p>Raw data variables for each sensor per location recorded as follow:</p>
+<p>Raw data variables for each sensor per location are recorded as follows:</p>
 
 <ul>
 <li>  Triaxial accelerometer:
@@ -133,7 +131,7 @@ This project is based on the work made by Veloso <em>et al.</em> "Qualitative Ac
 
 <p>A total of 36 raw data variables were then recorded.</p>
 
-<p>It was recorded also "fusion" variables obtained form the raw data variables:</p>
+<p>"Fusion" variables obtained from the raw data variables were also recorded:</p>
 
 <ul>
 <li>  Three Rotational angles (roll, pitch, yaw) per location:
@@ -150,7 +148,7 @@ This project is based on the work made by Veloso <em>et al.</em> "Qualitative Ac
 </li>
 </ul>
 
-<p>The data of accelerometer, magnetometer and gyroscope are "fused" by using a Direction Cosine Matrix (DCM) algorithm in the Razor IMU, that means a total of 16 "fused" variables are recorded. Furthermore, in some of "fused" variables, the following <em>descriptive statistics</em> variables ("stat") were recorded:</p>
+<p>The data from accelerometer, magnetometer and gyroscope are "fused" by using a Direction Cosine Matrix (DCM) algorithm in the Razor IMU, that means a total of 16 "fused" variables are recorded. Furthermore, in some of the "fused" variables, the following <em>descriptive statistics</em> variables ("stat") were recorded:</p>
 
 <ul>
 <li>  Max, Min, standard deviation(stddev), variance(var), average(avg) of rotational angles:
@@ -195,7 +193,7 @@ This project is based on the work made by Veloso <em>et al.</em> "Qualitative Ac
 <p>A total of 8 remainder variables.
 In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) variables.</p>
 
-<p>Each individual performed 5 "classes" of exercises. Each exercise was repeat 10 times. All together derived a total of 19642 recorded observables, which were then split by Coursera into two files:</p>
+<p>Each individual performed 5 "classes" of exercises. Each exercise was repeated 10 times. All together a total of 19642 recorded observables were derived, which were then split by Coursera into two files:</p>
 
 <ul>
 <li> train set to create the Model loaded as "pml.training" is a dataframe of 19622 x 160 </li>
@@ -219,13 +217,13 @@ In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) va
     <span class="pl-v">TidyData</span> <span class="pl-k">=</span> <span class="pl-smi">pml.training</span>
     colnames(<span class="pl-smi">TidyData</span>) <span class="pl-k">=</span> <span class="pl-smi">temp</span></pre></div>
 
-<p>Also, form the data structure we observed that there are missing values ("NA") in the data. We can check if the proportion is relevant by </p>
+<p>Also, from the data structure we observe that there are missing values ("NA") in the data. We can check if the proportion is relevant using</p>
 
 <div class="highlight highlight-source-r"><pre>    mean(is.na(<span class="pl-smi">TidyData</span>))</pre></div>
 
 <div class="highlight highlight-source-r"><pre>    [<span class="pl-c1">1</span>] <span class="pl-c1">0.6131835</span></pre></div>
 
-<p>Over 61% of the data is missed, which is a very significant proportion. So, we can set a threshold to remove variables that contain more than 95% of "NA", for example:</p>
+<p>Over 61% of the data is missing, which is a very significant proportion. So, we can set a threshold to remove variables that contain more than 95% of "NA", for example:</p>
 
 <div class="highlight highlight-source-r"><pre>    <span class="pl-v">NewTidyData1</span> <span class="pl-k">=</span> <span class="pl-smi">TidyData</span>[, colSums(is.na(<span class="pl-smi">TidyData</span>))<span class="pl-k">/</span>nrow(<span class="pl-smi">TidyData</span>) <span class="pl-k">&lt;</span> <span class="pl-c1">0.95</span>]
     dim(<span class="pl-smi">NewTidyData1</span>)</pre></div>
@@ -236,7 +234,7 @@ In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) va
 
 <div class="highlight highlight-source-r"><pre>   [<span class="pl-c1">1</span>] <span class="pl-c1">0</span></pre></div>
 
-<p>The <code>NewTidyData1</code> now does not contain any missed value. The first 20 rows of data structure of the <code>NewTidyData1</code>:</p>
+<p>The <code>NewTidyData1</code> now does not contain any missing values. The first 20 rows of data structure of the <code>NewTidyData1</code>:</p>
 
 <div class="highlight highlight-source-r"><pre> str(<span class="pl-smi">NewTidyData1</span>, <span class="pl-v">list.len</span><span class="pl-k">=</span><span class="pl-c1">20</span>)</pre></div>
 
@@ -263,7 +261,7 @@ In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) va
  <span class="pl-k">$</span> <span class="pl-smi">MagnetBeltZ</span>       <span class="pl-k">:</span> <span class="pl-smi">int</span>  <span class="pl-k">-</span><span class="pl-c1">313</span> <span class="pl-k">-</span><span class="pl-c1">311</span> <span class="pl-k">-</span><span class="pl-c1">305</span> <span class="pl-k">-</span><span class="pl-c1">310</span> <span class="pl-k">-</span><span class="pl-c1">302</span> <span class="pl-k">-</span><span class="pl-c1">312</span> <span class="pl-k">-</span><span class="pl-c1">311</span> <span class="pl-k">-</span><span class="pl-c1">313</span> <span class="pl-k">-</span><span class="pl-c1">312</span> <span class="pl-k">-</span><span class="pl-c1">308</span> <span class="pl-k">...</span>
   [<span class="pl-smi">list</span> <span class="pl-smi">output</span> <span class="pl-smi">truncated</span>]    </pre></div>
 
-<p>From the initial 160, there are a total of 60 variables. We can still reduce the number of variables <strong><em>assuming</em></strong> that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercised was performed. Then, variables such as: <em>"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"</em> can be removed together with the index <em>"X"</em> variable:</p>
+<p>From the initial 160, there are a total of 60 variables. We can still reduce the number of variables <strong>assuming</strong> that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercise was performed. Then, variables such as: <em>"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"</em> can be removed together with the index <em>"X"</em> variable:</p>
 
 <div class="highlight highlight-source-r"><pre>    library(<span class="pl-smi">dplyr</span>)
     <span class="pl-v">SelectData</span> <span class="pl-k">=</span> select(<span class="pl-smi">NewTidyData1</span>,<span class="pl-k">-</span>c(<span class="pl-smi">X</span><span class="pl-k">:</span><span class="pl-smi">NumWindow</span>))
@@ -278,12 +276,12 @@ In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) va
 
 <p><strong>5.    Propose Machine learning models base on the exploratory data</strong></p>
 
-<p>I used the <em>caret</em> package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classification and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.</p>
+<p>I used the <em>caret</em> package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classification and regression models. Caret also provides the means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.</p>
 
 <p><strong>5.1.    Data Preparation - Removing redundant variables by a correlation matrix</strong></p>
 
-<p>The data variables may be correlated to each other, which it may lead to redundancy in the model (<em><em>assumption</em></em>). By using <code>findCorrelation</code> from the <em>caret</em> package, we can obtain the correlation matrix of between the data variables. The function 
-can plot the the entity data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.</p>
+<p>The data variables may be correlated to each other, which it may lead to redundancy in the model (<em><em>assumption</em></em>). By using <code>findCorrelation</code> from the <em>caret</em> package, we can obtain the correlation matrix between the data variables. The function 
+can plot the data set to visualise those correlations (See Figure 1).  The plot makes it less difficult to choose the threshold of the correlation coefficient in  order to remove redundant variables. I chose an absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.</p>
 
 <div class="highlight highlight-source-r"><pre>    library(<span class="pl-smi">caret</span>)
     library(<span class="pl-smi">corrplot</span>)
@@ -321,7 +319,7 @@ can plot the the entity data set to visualise those correlations (See Figure 1).
 
 <p><strong>5.3.  Training a Model/Tuning Parameters/Variable Selection</strong></p>
 
-<p>As the main question of this assignment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are chosen, the type of resampling need to be opted. Caret Package has tools to perform, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap (<strong>default</strong>) resampling. Once the resampling was processed, the caret <code>train</code> function automatically chooses the best tuning parameters associated to the model.</p>
+<p>As the main question of this assignment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are chosen, the type of resampling needs to be opted for. Caret Package has tools to perform, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap (<strong>default</strong>) resampling. Once the resampling was processed, the caret <code>train</code> function automatically chooses the best tuning parameters associated to the model.</p>
 
 <div class="highlight highlight-source-r"><pre>    set.seed(<span class="pl-c1">3023</span>)
     <span class="pl-v">modelFit2</span> <span class="pl-k">=</span> train(<span class="pl-smi">Classe</span> <span class="pl-k">~</span>., <span class="pl-v">data</span><span class="pl-k">=</span><span class="pl-smi">trainData</span>, <span class="pl-v">method</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>rf<span class="pl-pds">"</span></span>, <span class="pl-v">prox</span><span class="pl-k">=</span><span class="pl-c1">TRUE</span>)
@@ -344,7 +342,7 @@ can plot the the entity data set to visualise those correlations (See Figure 1).
     <span class="pl-smi">Accuracy</span> <span class="pl-smi">was</span> <span class="pl-smi">used</span> <span class="pl-smi">to</span> <span class="pl-smi">select</span> <span class="pl-smi">the</span> <span class="pl-smi">optimal</span> <span class="pl-smi">model</span> <span class="pl-smi">using</span>  <span class="pl-smi">the</span> <span class="pl-smi">largest</span> <span class="pl-smi">value</span>.
     <span class="pl-smi">The</span> <span class="pl-smi">final</span> <span class="pl-smi">value</span> <span class="pl-smi">used</span> <span class="pl-k">for</span> <span class="pl-smi">the</span> <span class="pl-smi">model</span> <span class="pl-smi">was</span> <span class="pl-v">mtry</span> <span class="pl-k">=</span> <span class="pl-c1">23</span>. </pre></div>
 
-<p>Accuracy is the default metric selected to be optimized in <code>train()</code> for categorical variables, in this case, "Classe". The proposed model show that 23 predictors were need to get the best accuracy on the training set. In order words, <code>caret</code> has optimised the model and concluded that selecting 23 most important predictors gives the best accuracy. The "out-of-bag" (OOB) error rate of the final model can be obtained by:</p>
+<p>Accuracy is the default metric selected to be optimized in <code>train()</code> for categorical variables, in this case, "Classe". The proposed model shows that 23 predictors were needed to get the best accuracy on the training set. In order words, <code>caret</code> has optimised the model and concluded that selecting 23 most important predictors gives the best accuracy. The "out-of-bag" (OOB) error rate of the final model can be obtained by:</p>
 
 <div class="highlight highlight-source-r"><pre><span class="pl-smi">modelFit2</span><span class="pl-k">$</span><span class="pl-smi">finalModel</span></pre></div>
 
@@ -414,7 +412,7 @@ can plot the the entity data set to visualise those correlations (See Figure 1).
     <span class="pl-smi">MagnetForearmY</span>       <span class="pl-c1">7.14137478</span>
     <span class="pl-smi">MagnetForearmZ</span>      <span class="pl-c1">15.57428210</span></pre></div>
 
-<p>We can also get the plot of the variable importance sorted in descendent order by <code>plot(varImp(modelFit2, scale=TRUE))</code>. See Figure 2.</p>
+<p>We can also get the plot of the variable importance sorted in descending order by <code>plot(varImp(modelFit2, scale=TRUE))</code>. See Figure 2.</p>
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Fig2.png">
@@ -471,7 +469,7 @@ The evalution of the training fit model can be made by using the caret <code>pre
 <li> Selecting variables by Variable importance ranking:</li>
 </ol>
 
-<p>I tried to improve the model by changing the number of predictors. Based on the previous results, I reduced more the number of variables by creating a cutoff point for the best variables by their importance:</p>
+<p>I tried to improve the model by changing the number of predictors. Based on the previous results, I reduced more of the number of variables by creating a cutoff point for the best variables by their importance:</p>
 
 <div class="highlight highlight-source-r"><pre>    library(<span class="pl-smi">dplyr</span>)
     <span class="pl-v">temp</span> <span class="pl-k">=</span>varImp(<span class="pl-smi">modelFit2</span>, <span class="pl-v">scale</span><span class="pl-k">=</span><span class="pl-c1">TRUE</span>)
@@ -565,13 +563,13 @@ The evalution of the training fit model can be made by using the caret <code>pre
 <span class="pl-s">        Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838</span>
 <span class="pl-s">        Balanced Accuracy      0.9988   0.9965   0.9857   0.9921   0.9980</span></pre></div>
 
-<p>In this trial, the number of predictors selected in the final model was again decreased to <strong>12 predictors</strong>. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poor than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). </p>
+<p>In this trial, the number of predictors selected in the final model was again decreased to <strong>12 predictors</strong>. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poorer than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). </p>
 
 <ol>
 <li> Cross-Validation type:</li>
 </ol>
 
-<p>I also worked with 10-fold cross-validation (k=10). This resampling in general was much more faster than bootstrap, that is, roughly ten-folds fast. As we can see the results showed below, the accuracy is very similar to the "rf" but the OOB error is smaller that the original model. The following calculation uses the data with importance variable cutoff of 10%.</p>
+<p>I also worked with 10-fold cross-validation (k=10). This resampling in general was much faster than bootstrap, that is, roughly ten-fold faster. As we can see in the results shown below, the accuracy is very similar to the "rf" but the OOB error is smaller that the original model. The following calculation uses the data with an importance variable cutoff of 10%.</p>
 
 <div class="highlight highlight-source-r"><pre>    set.seed(<span class="pl-c1">1825</span>)
     <span class="pl-smi">fitControl</span> <span class="pl-k">&lt;-</span> trainControl( <span class="pl-v">method</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>cv<span class="pl-pds">"</span></span>, <span class="pl-v">number</span> <span class="pl-k">=</span> <span class="pl-c1">10</span>)
@@ -727,13 +725,13 @@ The evalution of the training fit model can be made by using the caret <code>pre
 <span class="pl-s">    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838</span>
 <span class="pl-s">    Balanced Accuracy      0.9987   0.9972   0.9867   0.9957   0.9987</span></pre></div>
 
-<p>This result is very welcoming because the accuracy is very similar to modelFit2 but the OOB error rate is small (0.86% vs 0.91%). But the most relevant is the modelling time. The CV resampling reduce the time from 5 hours to 30 minutes!</p>
+<p>This result is very welcoming because the accuracy is very similar to modelFit2 but the OOB error rate is small (0.86% vs 0.91%). But the most relevant is the modelling time. The CV resampling reduced the time from 5 hours to 30 minutes!</p>
 
 <ol>
 <li>Change the number of trees</li>
 </ol>
 
-<p>We can obtain the relationship model error of classification and number of trees in the "Random Forest" model. For instance, the model modelFit2c (10-fold cross-validation with importance variable cutoff 10%) has the error related to the number of trees showed in Figure 3:</p>
+<p>We can obtain the relationship model error of classification and number of trees in the "Random Forest" model. For instance, the model modelFit2c (10-fold cross-validation with importance variable cutoff 10%) has the error related to the number of trees shown in Figure 3:</p>
 
 <div class="highlight highlight-source-r"><pre>    library(<span class="pl-smi">reshape</span>)
     <span class="pl-smi">df.melted</span> <span class="pl-k">&lt;-</span> melt(<span class="pl-smi">modelFit2c</span><span class="pl-k">$</span><span class="pl-smi">finalModel</span><span class="pl-k">$</span><span class="pl-smi">err.rate</span>, <span class="pl-v">id</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>ntree<span class="pl-pds">"</span></span>)
@@ -824,7 +822,7 @@ The evalution of the training fit model can be made by using the caret <code>pre
 <span class="pl-s">    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838</span>
 <span class="pl-s">    Balanced Accuracy      0.9985   0.9962   0.9842   0.9920   0.9982</span></pre></div>
 
-<p>The accuracy did not change by much, but the OOB error rate was the highest of the all evaluated models (1.26%). On the other hand, it was the fitted model that took less time (~ 6 minutes). </p>
+<p>The accuracy did not change by much, but the OOB error rate was the highest of all the evaluated models (1.26%). On the other hand, it was the fitted model that took less time (~ 6 minutes). </p>
 
 <h3>
 <a id="predicting-the-20-test-cases" class="anchor" href="#predicting-the-20-test-cases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Predicting the 20 test cases:</h3>
@@ -858,12 +856,12 @@ The evalution of the training fit model can be made by using the caret <code>pre
 <div class="highlight highlight-source-r"><pre> [<span class="pl-c1">1</span>] <span class="pl-smi">B</span> <span class="pl-smi">A</span> <span class="pl-smi">B</span> <span class="pl-smi">A</span> <span class="pl-smi">A</span> <span class="pl-smi">E</span> <span class="pl-smi">D</span> <span class="pl-smi">B</span> <span class="pl-smi">A</span> <span class="pl-smi">A</span> <span class="pl-smi">B</span> <span class="pl-smi">C</span> <span class="pl-smi">B</span> <span class="pl-smi">A</span> <span class="pl-smi">E</span> <span class="pl-smi">E</span> <span class="pl-smi">A</span> <span class="pl-smi">B</span> <span class="pl-smi">B</span> <span class="pl-smi">B</span>
 <span class="pl-smi">Levels</span><span class="pl-k">:</span> <span class="pl-smi">A</span> <span class="pl-smi">B</span> <span class="pl-smi">C</span> <span class="pl-smi">D</span> <span class="pl-smi">E</span></pre></div>
 
-<p>I have also evaluated the other 4 models:  modelFit2a, modelFit2b, modelFit2c and modelFit2f. These models presented slightly differnce in accuracies and as expected, all gave the same results.</p>
+<p>I have also evaluated the other 4 models:  modelFit2a, modelFit2b, modelFit2c and modelFit2f. These models presented slightly different inaccuracies and as expected, all gave the same results.</p>
 
 <h3>
 <a id="conclusions" class="anchor" href="#conclusions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Conclusions:</h3>
 
-<p>In this report, it is shown how to download the data, look into it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). It was performed correlations between the variables to reduce the model complexity. The mains assumptions made for the proposed model is to be unperson and not time dependent. The initial 160 variables was reduced to 46. Final models shows that only 12 predictors could be used. Also, it was shown how to build a Machine Learning Model by using <em>caret</em> package, and how the parameters in the <code>train()</code> function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Forest method, all the models in this work predict the same result in the 20 test cases, that is:</p>
+<p>In this report, how to download the data is shown and also how to review it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). Correlations between the variables to reduce the model complexity were performed. The main assumptions made for the proposed model is to be person-independent and time-independent. The initial 160 variables were reduced to 46. Final models show that only 12 predictors could be used. Also, how to build a Machine Learning Model by using <em>caret</em> package was shown, along with how the parameters in the <code>train()</code> function can affect the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in terms of accuracy but the modelling of the training set was much faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Forest method, all the models in this work predict the same result in the 20 test cases, that is:</p>
 
 <div class="highlight highlight-source-r"><pre>  table(predict(<span class="pl-smi">modelFit2f</span>, <span class="pl-v">newdata</span> <span class="pl-k">=</span> <span class="pl-smi">CaseDataTest</span>))</pre></div>
 
