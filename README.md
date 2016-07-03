@@ -506,7 +506,7 @@ I tried to improve the model by changing the number of predictors. Based on the 
         Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
         Balanced Accuracy      0.9988   0.9965   0.9857   0.9921   0.9980
 ```        
-In this trial, the number of predictors selected in the final model was again decreased to 12. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poor than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). 
+In this trial, the number of predictors selected in the final model was again decreased to **12 predictors**. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poor than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). 
 
 
 2.  Cross-Validation type:
@@ -793,21 +793,54 @@ We can see in Figure 3 that the error in all of them stablised early than ntree=
 The accuracy did not change by much, but the OOB error rate was the highest of the all evaluated models (1.26%). On the other hand, it was the fitted model that took less time (~ 6 minutes). 
     
 ###Predicting the 20 test cases:
-I have evaluated 5 different models: modelFit2, modelFit2a, modelFit2b, modelFit2c and modelFit2f.
+After tidying up the test data set (pml.testing), we can estimate the exercise Classe of each one of the 20 test cases.
+```R
+  temp=names(pml.testing)
+  temp=gsub("^a","A",temp); temp=gsub("^c","C",temp); temp=gsub("^c","C",temp); temp=gsub("^g","G",temp); 
+  temp=gsub("^k","K",temp); temp=gsub("^m","M",temp); temp=gsub("^n","N",temp); temp=gsub("^p","P",temp);
+  temp=gsub("^r","R",temp); temp=gsub("^s","S",temp); temp=gsub("^t","T",temp); temp=gsub("^u","U",temp);
+  temp=gsub("^v","V",temp); temp=gsub("^y","Y",temp); temp=gsub("_a","A",temp); temp=gsub("_b","B",temp);
+  temp=gsub("_c","C",temp); temp=gsub("_d","D",temp); temp=gsub("_f","F",temp); temp=gsub("_g","G",temp);
+  temp=gsub("_k","K",temp); temp=gsub("_m","M",temp); temp=gsub("_n","N",temp); temp=gsub("_p","P",temp);
+  temp=gsub("_r","R",temp); temp=gsub("_s","S",temp); temp=gsub("_t","T",temp); temp=gsub("_u","U",temp);
+  temp=gsub("_v","V",temp); temp=gsub("_x","X",temp); temp=gsub("_y","Y",temp); temp=gsub("_w","W",temp);
+  temp=gsub("_z","Z",temp); temp=gsub("_1","1",temp); temp=gsub("_2","2",temp);
+  TidyDataTest = pml.testing
+  colnames(TidyDataTest) = tempt
+  NewTidyDataTest = TidyDataTest[, colSums(is.na(TidyDataTest))/nrow(TidyDataTest) < 0.95]
+  dim(NewTidyDataTest)
+```
+
+```R
+  [1] 20 60
+```
+```R
+  library(dplyr)
+  CaseDataTest = select(NewTidyDataTest,-c(X:NumWindow))
+  dim(CaseDataTest)
+  [1] 20 53
+```
+
+```R
+  predict(modelFit2, newdata = CaseDataTest)
+```
+```R
+ [1] B A B A A E D B A A B C B A E E A B B B
+Levels: A B C D E
+```
+I have also evaluated the other 4 models:  modelFit2a, modelFit2b, modelFit2c and modelFit2f. These models presented slightly differnce in accuracies and as expected, all gave the same results.
 
 ###Conclusions:
-In this report, it is shown how to download the data, look into it by analysing the data structure, tidying the data and reorganising for better variable description (CamelCase), to perform correlation between the variables to reduce the model complexity and making assumptions such as that the model is unpersonal and not time related. These preliminary data treatment reduced the initial 160 variables to 46. Also, it is shown how to build a Machine Learning Model by using *caret* package, and how the parameters in the `train()` function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model.
+In this report, it is shown how to download the data, look into it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). It was performed correlations between the variables to reduce the model complexity. The mains assumptions made for the proposed model is to be unpersonal and not time dependent. The initial 160 variables was reduced to 46. Final models shows that only 12 predictors could be used. Also, it was shown how to build a Machine Learning Model by using *caret* package, and how the parameters in the `train()` function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Foreste method, all the models in this work predict the same result in the 20 test cases, that is:
+'''R
+  table(predict(modelFit2f, newdata = CaseDataTest))
+'''
+'''R
+A B C D E 
+7 8 1 1 3 
+'''
+only 7 out of 20 shows the right way to perform the dumbbell lifting exercise.
 
-However, using the Random Foreste method, all the model derived from "rf" give the same result in the 20 test cases, that is,
-
-
-As part of the Coursera assessment, the work described here are restricted to answer the followings:
-1.  To predict the manner in which the exercise was done.
-2.  To create a report describing how a proposed model was built (this present document).
-3.  To show how cross validation was implemented
-4.  To analyse the sample error.
-5.  To discuss the assumptions made.
-6.  To apply the proposed model to predict 20 different test cases.
 
 
 ***************************************************
