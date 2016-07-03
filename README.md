@@ -648,19 +648,27 @@ As part of the Coursera assessment, the work described here are restricted to an
 ***************************************************
 ####Reference:
 http://wiki.ros.org/razor_imu_9dof
+
 https://perceptual.mpi-inf.mpg.de/files/2013/03/velloso13_ah.pdf
+
 https://www.sparkfun.com/products/10736
+
 http://www.starlino.com/imu_guide.html
+
 http://www.aliexpress.com/item/DFRobot-9-degrees-of-freedom-inertial-navigation-sensors-9DOF-Razor-IMU-AHRS-compatib/1544796282.html
-"Exploratory Data Analysis with R" Roger D. Peng (ver 2015-07-03)
+
 http://www.jmlr.org/papers/volume3/guyon03a/guyon03a.pdf
+
 http://www.analyticsvidhya.com/blog/2016/03/select-important-variables-boruta-package/
-Journal of Statistical Software November 2008, Volume 28, Issue 5.
+
+http://web.ipac.caltech.edu/staff/fmasci/home/astro_refs/BuildingPredictiveModelsR_caret.pdf
+
 http://topepo.github.io/caret/training.html
+
 http://will-stanton.com/machine-learning-with-r-an-irresponsibly-fast-tutorial/
-Predictive Analytics with Microsoft Azure Machine Learning 2nd Edition: Edition 2
+
 http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
+
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#hr
+
 http://hplgit.github.io/teamods/bitgit/html-github/._main_bitgit002.html
-
-
