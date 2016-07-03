@@ -15,15 +15,11 @@ As part of the Coursera assessment, the report described here are restricted to 
 *   Apply the proposed model to predict 20 different test cases.
 
 ###Experiment description: 
-Six (6) volunteers weared four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were:
+<img style="float:left">
+<img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png"/>
+Six (6) volunteers weared four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell. 
 
-*   glove
-*   armband
-*   lumbar belt
-*   dumbbell 
-
-<img style="float: right;" src="https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png">
-
+</p>
 The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way and the others in wrong way:
 - Class A - The rigth exercise (*i.e*., exactly according to the specification)
 - Class B - Throwing the elbows to the front
