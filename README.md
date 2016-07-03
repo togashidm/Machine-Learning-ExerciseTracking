@@ -508,34 +508,96 @@ I tried to improve the model by changing the number of predictors. Based on the 
 ```        
 In this trial, the number of predictors selected in the final model was again decreased to 12. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poor than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). 
 
-2. Change the number of trees
 
-We can obtain the relationship model error of classification and number of trees in the "Random Forest" model by:
-```R
-    library(reshape)
-    df.melted <- melt(modelFit2$finalModel$err.rate, id = "ntree")
-    names(df.melted) = c('ntree','Classe','Error')
-    ggplot(data = df.melted, aes(x = ntree, y = Error, color = Classe)) 
-    +   geom_line(size=1)
-```    
- <p align="center">
-  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Fig3.png">
-  <b>Figure 3 - </b>Random Forest Model Error per #tree</b><br>
-  </p>
+2.  Cross-Validation type:
 
-We can see in Figure 3 that the error in all of them stablised early than ntree=500 (default). So, I decided to try a model fit with ntree=200.
+I also worked with 10-fold cross-validation (k=10). This resampling in general was much more faster than bootstrap, that is, roughly ten-folds fast. As we can see the results showed below, the accuracy is very similar to the "rf" but the OOB error is smaller that the original model. The following calculation uses the data with importance variable cutoff of 10%.
 ```R
-    date()
-    set.seed(10201)
-    modelFit2h = train(Classe ~., data=trainData, method="rf", ntree=200, prox=TRUE)
-    modelFit2h
-    date()
+    set.seed(1825)
+    fitControl <- trainControl( method = "cv", number = 10)
+    modelFit2c <- train(Classe ~ ., data = trainDataImp, method="rf", trControl = fitControl)
+    modelFit2c
 ```
- 
-3.  Cross-Validation type:
 
-I also worked with 10-fold cross-validation (k=10). This resampling in general was much more faster than bootstrap, that is, roughly ten-folds fast. As we can see the results showed below, the accuracy is very similar to the "rf" but the OOB error is smaller that the original model.
+```R
+    Random Forest 
+    
+    11776 samples
+       23 predictor
+        5 classes: 'A', 'B', 'C', 'D', 'E' 
+    
+    No pre-processing
+    Resampling: Cross-Validated (10 fold) 
+    Summary of sample sizes: 10598, 10598, 10599, 10599, 10598, 10598, ... 
+    Resampling results across tuning parameters:
+    
+      mtry  Accuracy   Kappa    
+       2    0.9862432  0.9825951
+      12    0.9872615  0.9838864
+      23    0.9783446  0.9726068
+    
+    Accuracy was used to select the optimal model using  the largest value.
+    The final value used for the model was mtry = 12. 
+```
 
+```R
+  modelFit2c$finalModel
+
+  Call:
+   randomForest(x = x, y = y, mtry = param$mtry) 
+                 Type of random forest: classification
+                       Number of trees: 500
+  No. of variables tried at each split: 12
+  
+          OOB estimate of  error rate: 1.14%
+  Confusion matrix:
+       A    B    C    D    E class.error
+  A 3335    9    1    1    2 0.003882915
+  B   24 2231   24    0    0 0.021061869
+  C    0   21 2017   16    0 0.018013632
+  D    1    1   18 1908    2 0.011398964
+  E    0    1    4    9 2151 0.006466513
+```
+
+```R
+  testPred <- predict(modelFit2c, newdata = testData)
+  confusionMatrix(testData$Classe,testPred)
+```
+
+```R
+    Confusion Matrix and Statistics
+    
+              Reference
+    Prediction    A    B    C    D    E
+             A 2231    1    0    0    0
+             B    7 1498   13    0    0
+             C    0    4 1354   10    0
+             D    0    2   18 1263    3
+             E    0    1    4    3 1434
+    
+    Overall Statistics
+                                              
+                   Accuracy : 0.9916          
+                     95% CI : (0.9893, 0.9935)
+        No Information Rate : 0.2852          
+        P-Value [Acc > NIR] : < 2.2e-16       
+                                              
+                      Kappa : 0.9894          
+     Mcnemar's Test P-Value : NA              
+    
+    Statistics by Class:
+    
+                         Class: A Class: B Class: C Class: D Class: E
+    Sensitivity            0.9969   0.9947   0.9748   0.9898   0.9979
+    Specificity            0.9998   0.9968   0.9978   0.9965   0.9988
+    Pos Pred Value         0.9996   0.9868   0.9898   0.9821   0.9945
+    Neg Pred Value         0.9988   0.9987   0.9946   0.9980   0.9995
+    Prevalence             0.2852   0.1919   0.1770   0.1626   0.1832
+    Detection Rate         0.2843   0.1909   0.1726   0.1610   0.1828
+    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
+    Balanced Accuracy      0.9983   0.9958   0.9863   0.9932   0.9983
+```
+Performing the same calculation but now using the original data set with 46 variables (no cutoff) and comparing with the original modelFit2, we can compare the effect of only 10-fold cross-validation (k=10).
 ```R
     set.seed(10025)
     fitControl <- trainControl( method = "cv", number = 10)
@@ -622,11 +684,116 @@ I also worked with 10-fold cross-validation (k=10). This resampling in general w
     Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
     Balanced Accuracy      0.9987   0.9972   0.9867   0.9957   0.9987
 ```
-
+This result is very welcoming because the accuracy is very similar to modelFit2 but the OOB error rate is small (0.86% vs 0.91%). But the most relevant is the modelling time. The CV resampling reduce the time from 5 hours to 30 minutes!
     > save.image("~/machinelearning5.RData")
+
+3. Change the number of trees
+
+We can obtain the relationship model error of classification and number of trees in the "Random Forest" model. For instance, the model modelFit2c (10-fold cross-validation with importance variable cutoff 10%) has the error related to the number of trees showed in Figure 3:
+```R
+    library(reshape)
+    df.melted <- melt(modelFit2c$finalModel$err.rate, id = "ntree")
+    names(df.melted) = c('ntree','Classe','Error')
+    ggplot(data = df.melted, aes(x = ntree, y = Error, color = Classe)) 
+    +   geom_line(size=1)
+```    
+ <p align="center">
+  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Fig3.png">
+  <b>Figure 3 - </b>Random Forest Model Error per #tree</b><br>
+  </p>
+
+We can see in Figure 3 that the error in all of them stablised early than ntree=500 (default). So, by trying a model fit with ntree=200, we have:
+```R
+  set.seed(2825)
+  fitControl <- trainControl( method = "cv", number = 10)
+  modelFit2b <- train(Classe ~ ., data = trainDataImp, method="rf", ntree=200, trControl = fitControl)
+  modelFit2b
+```
+```R
+  Random Forest 
+    
+  11776 samples
+     23 predictor
+      5 classes: 'A', 'B', 'C', 'D', 'E' 
+    
+  No pre-processing
+  Resampling: Cross-Validated (10 fold) 
+  Summary of sample sizes: 10598, 10599, 10599, 10597, 10598, 10598, ... 
+  Resampling results across tuning parameters:
+    
+    mtry  Accuracy   Kappa    
+     2    0.9866676  0.9831335
+    12    0.9871779  0.9837805
+    23    0.9774111  0.9714243
+    
+  Accuracy was used to select the optimal model using  the largest value.
+  The final value used for the model was mtry = 12. 
+```
+
+```R
+  modelFit2b$finalModel
+```
+
+```R
+  Call:
+  randomForest(x = x, y = y, ntree = 200, mtry = param$mtry) 
+               Type of random forest: classification
+                       Number of trees: 200
+  No. of variables tried at each split: 12
+  
+          OOB estimate of  error rate: 1.26%
+  Confusion matrix:
+       A    B    C    D    E class.error
+  A 3328   14    2    2    2 0.005973716
+  B   24 2230   23    1    1 0.021500658
+  C    0   20 2016   18    0 0.018500487
+  D    1    0   20 1902    7 0.014507772
+  E    0    0    3   10 2152 0.006004619
+```
+
+```R
+  testPred <- predict(modelFit2b, newdata = testData)
+  confusionMatrix(testData$Classe,testPred)
+```
+
+```R
+  Confusion Matrix and Statistics
+    
+              Reference
+    Prediction    A    B    C    D    E
+             A 2230    2    0    0    0
+             B    6 1495   16    1    0
+             C    0    4 1354   10    0
+             D    0    0   20 1263    3
+             E    0    0    5    5 1432
+    
+    Overall Statistics
+                                              
+                   Accuracy : 0.9908          
+                     95% CI : (0.9885, 0.9928)
+        No Information Rate : 0.285           
+        P-Value [Acc > NIR] : < 2.2e-16       
+                                              
+                      Kappa : 0.9884          
+     Mcnemar's Test P-Value : NA              
+    
+    Statistics by Class:
+    
+                         Class: A Class: B Class: C Class: D Class: E
+    Sensitivity            0.9973   0.9960   0.9706   0.9875   0.9979
+    Specificity            0.9996   0.9964   0.9978   0.9965   0.9984
+    Pos Pred Value         0.9991   0.9848   0.9898   0.9821   0.9931
+    Neg Pred Value         0.9989   0.9991   0.9937   0.9976   0.9995
+    Prevalence             0.2850   0.1913   0.1778   0.1630   0.1829
+    Detection Rate         0.2842   0.1905   0.1726   0.1610   0.1825
+    Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
+    Balanced Accuracy      0.9985   0.9962   0.9842   0.9920   0.9982
+```
+    
+The accuracy did not change by much, but the OOB error rate was the highest of the all evaluated models (1.26%). On the other hand, it was the fitted model that took less time (~ 6 minutes). 
     
 ###Predicting the 20 test cases:
-
+I have evaluated 5 different models: modelFit2, modelFit2a, modelFit2b, modelFit2c and modelFit2f.
 
 ###Conclusions:
 In this report, it is shown how to download the data, look into it by analysing the data structure, tidying the data and reorganising for better variable description (CamelCase), to perform correlation between the variables to reduce the model complexity and making assumptions such as that the model is unpersonal and not time related. These preliminary data treatment reduced the initial 160 variables to 46. Also, it is shown how to build a Machine Learning Model by using *caret* package, and how the parameters in the `train()` function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model.
