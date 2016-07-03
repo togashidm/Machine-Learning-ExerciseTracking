@@ -28,7 +28,7 @@
 <a id="summary" class="anchor" href="#summary" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Summary:</h3>
 
 <p>Nowadays, to improve the life quality more and more peole are practicing sports. The practicing not only improve the body physical conditions or fitness but also decrease the likehood of many ills related to sedentarism, such as heart diseases. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercises when are done in the wrong way, they are, on one hand, less effective. On the other hand they can be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
-This project is based on the work made by Veloso et al. "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedbacking the user at real-time; increasing the likewood of the exercise effectiviness. </p>
+This project is based on the work made by Veloso <em>et al.</em> "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedbacking the user at real-time; increasing the likewood of the exercise effectiviness. </p>
 
 <h3>
 <a id="scope" class="anchor" href="#scope" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scope:</h3>
@@ -261,7 +261,7 @@ In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) va
  <span class="pl-k">$</span> <span class="pl-smi">MagnetBeltZ</span>       <span class="pl-k">:</span> <span class="pl-smi">int</span>  <span class="pl-k">-</span><span class="pl-c1">313</span> <span class="pl-k">-</span><span class="pl-c1">311</span> <span class="pl-k">-</span><span class="pl-c1">305</span> <span class="pl-k">-</span><span class="pl-c1">310</span> <span class="pl-k">-</span><span class="pl-c1">302</span> <span class="pl-k">-</span><span class="pl-c1">312</span> <span class="pl-k">-</span><span class="pl-c1">311</span> <span class="pl-k">-</span><span class="pl-c1">313</span> <span class="pl-k">-</span><span class="pl-c1">312</span> <span class="pl-k">-</span><span class="pl-c1">308</span> <span class="pl-k">...</span>
   [<span class="pl-smi">list</span> <span class="pl-smi">output</span> <span class="pl-smi">truncated</span>]    </pre></div>
 
-<p>From the initial 160, there are a total of 60 variables. We can still reduce the number of variables <strong><em>assuming</em></strong> that the prediction is not time and individual dependent. Then, variables such as: <em>"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"</em> can be removed together with the index <em>"X"</em> variable:</p>
+<p>From the initial 160, there are a total of 60 variables. We can still reduce the number of variables <strong><em>assuming</em></strong> that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercised was performed. Then, variables such as: <em>"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"</em> can be removed together with the index <em>"X"</em> variable:</p>
 
 <div class="highlight highlight-source-r"><pre>    library(<span class="pl-smi">dplyr</span>)
     <span class="pl-v">SelectData</span> <span class="pl-k">=</span> select(<span class="pl-smi">NewTidyData1</span>,<span class="pl-k">-</span>c(<span class="pl-smi">X</span><span class="pl-k">:</span><span class="pl-smi">NumWindow</span>))
@@ -272,28 +272,32 @@ In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) va
 
 <p><strong>5.    Propose Machine learning models base on the exploratory data</strong></p>
 
-<p>I used the <em>caret</em> package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for:
-(i)   Data preparation
-(ii)  Data splitting
-(iii) Training a Model
-(iv)  Model evaluation
-(v)   Variable selection</p>
+<p>I used the <em>caret</em> package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.</p>
 
-<p><strong>i) Data Preparation - Removing redudant variables by a correlation matrix</strong></p>
+<p>5.1.    Data Preparation - Removing redudant variables by a correlation matrix</p>
 
-<p>The data variables may be correlated to each other, which it may lead to rendundancy in the model (<em><em>assumption</em></em>). By using <code>findCorrelation</code> from the <em>caret</em> package, we can obtain the correlation matrix of between the data variables, and remove those variables with correlation coefficient larger than 0.90 (arbitrary threshold).</p>
+<p>The data variables may be correlated to each other, which it may lead to rendundancy in the model (<em><em>assumption</em></em>). By using <code>findCorrelation</code> from the <em>caret</em> package, we can obtain the correlation matrix of between the data variables. The function 
+can plot the the entiry data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.</p>
 
 <div class="highlight highlight-source-r"><pre>    library(<span class="pl-smi">caret</span>)
     <span class="pl-smi">threshold</span>   <span class="pl-k">&lt;-</span>  <span class="pl-c1">0.90</span>
     <span class="pl-smi">corMatrix</span>   <span class="pl-k">&lt;-</span>  cor(<span class="pl-smi">SelectData</span>[,<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">52</span>])
-    <span class="pl-smi">highCor</span> <span class="pl-k">&lt;-</span>  findCorrelation(<span class="pl-smi">corMatrix</span>, <span class="pl-smi">threshold</span>)
+    corrplot(<span class="pl-smi">corMatrix</span>, <span class="pl-v">method</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>square<span class="pl-pds">"</span></span>, <span class="pl-v">order</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>hclust<span class="pl-pds">"</span></span>) <span class="pl-c"># Plot the correlation matrix</span>
+
+    <span class="pl-smi">highCor</span> <span class="pl-k">&lt;-</span>  findCorrelation(<span class="pl-smi">corMatrix</span>, <span class="pl-smi">threshold</span>) <span class="pl-c">#sub set those that thas correlation &gt;, = 0.9, or &lt; -0.9</span>
     <span class="pl-smi">highCorRm</span>   <span class="pl-k">&lt;-</span>  row.names(<span class="pl-smi">corMatrix</span>)[<span class="pl-smi">highCor</span>]
     <span class="pl-smi">highCorRm</span>
-    [<span class="pl-c1">1</span>] <span class="pl-s"><span class="pl-pds">"</span>AccelBeltZ<span class="pl-pds">"</span></span>    <span class="pl-s"><span class="pl-pds">"</span>RollBelt<span class="pl-pds">"</span></span>       <span class="pl-s"><span class="pl-pds">"</span>AccelBeltY<span class="pl-pds">"</span></span>     <span class="pl-s"><span class="pl-pds">"</span>AccelBeltX<span class="pl-pds">"</span></span>     <span class="pl-s"><span class="pl-pds">"</span>GyrosDumbbellX<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>GyrosDumbbellZ<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>GyrosArmX<span class="pl-pds">"</span></span>
+    [<span class="pl-c1">1</span>] <span class="pl-s"><span class="pl-pds">"</span>AccelBeltZ<span class="pl-pds">"</span></span>    <span class="pl-s"><span class="pl-pds">"</span>RollBelt<span class="pl-pds">"</span></span>       <span class="pl-s"><span class="pl-pds">"</span>AccelBeltY<span class="pl-pds">"</span></span>     <span class="pl-s"><span class="pl-pds">"</span>AccelBeltX<span class="pl-pds">"</span></span>     
+        <span class="pl-s"><span class="pl-pds">"</span>GyrosDumbbellX<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>GyrosDumbbellZ<span class="pl-pds">"</span></span>  <span class="pl-s"><span class="pl-pds">"</span>GyrosArmX<span class="pl-pds">"</span></span>
 
     <span class="pl-smi">SelectData2</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">SelectData</span>[, <span class="pl-k">-</span><span class="pl-smi">highCor</span>]
     dim(<span class="pl-smi">SelectData2</span>)
     [<span class="pl-c1">1</span>] <span class="pl-c1">19622</span>    <span class="pl-c1">46</span></pre></div>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Fig1.png">
+  <b>Figure 1 - </b>Variables Correlation Map<br>
+  </p>
 
 <p><strong>ii) Data spliting</strong></p>
 
