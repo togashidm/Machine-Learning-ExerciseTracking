@@ -187,18 +187,20 @@ Therefore, the number of variables is reduced to 53.
 
 I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classifycation and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.
 
-5.1.    Data Preparation - Removing redudant variables by a correlation matrix
+**5.1.    Data Preparation - Removing redudant variables by a correlation matrix**
 
 The data variables may be correlated to each other, which it may lead to rendundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables. The function 
 can plot the the entiry data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.
 ```R
     library(caret)
+    library(corrplot)
     threshold   <-  0.90
     corMatrix   <-  cor(SelectData[,1:52])
     corrplot(corMatrix, method="square", order="hclust") # Plot the correlation matrix
     
     highCor <-  findCorrelation(corMatrix, threshold) #sub set those that thas correlation >, = 0.9, or < -0.9
     highCorRm   <-  row.names(corMatrix)[highCor]
+    
     highCorRm
     [1] "AccelBeltZ"    "RollBelt"       "AccelBeltY"     "AccelBeltX"     
         "GyrosDumbbellX" "GyrosDumbbellZ"  "GyrosArmX"
@@ -212,34 +214,32 @@ can plot the the entiry data set to visualise those correlations (See Figure 1).
   <b>Figure 1 - </b>Variables Correlation Map</b><br>
   </p>
 
-**ii) Data spliting**
+**5.2.  Data spliting**
 
 The *caret* function `createDataPartition` is used to randomly split the data set. I set the standard proportion of 60% of the data to be used for model training and 40% used for testing model performance.
 ```R
     library("caret")
     library("e1071")
-    set.seed(123)
-    inTrain <- createDataPartition(SelectData$Class, p = 0.6, list = FALSE)
-    trainData <- SelectData[inTrain,]
-    testData <- SelectData[-inTrain,]
-    modelFit1 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
-
-    library("caret")
     set.seed(1023)
     inTrain <- createDataPartition(SelectData2$Class, p = 0.6, list = FALSE)
     trainData <- SelectData2[inTrain,]
     testData <- SelectData2[-inTrain,]
-    modelFit2 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
 ```
-**iii) Training a Model/Tuning Parameters/Building the Final model**
+**5.3.  Training a Model/Tuning Parameters/Building the Final model**
 
 As the main question of this assigment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are choosen, the type of resampling (cross-validation) need to be opted. 
-Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap resampling. I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
+Caret Package has tools to perfom, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap resampling.
 
-Using correlation to reduce number of variable and eliminating UserName
+I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
+```R
+    modelFit2 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
+```
 
 ```R
-    modelFit2
+modelFit2
+```
+
+```R
     11776 samples
     45 predictor
     5 classes: 'A', 'B', 'C', 'D', 'E' 
@@ -256,16 +256,40 @@ Using correlation to reduce number of variable and eliminating UserName
 
     Accuracy was used to select the optimal model using  the largest value.
     The final value used for the model was mtry = 23. 
+```
 
-> modelFit2$finalModel
+```R
+confusionMatrix(modelFit2)
+``` 
 
-Call:
- randomForest(x = x, y = y, mtry = param$mtry, proximity = TRUE) 
+```R
+    Bootstrapped (25 reps) Confusion Matrix 
+    
+    (entries are percentual average cell counts across resamples)
+     
+              Reference
+    Prediction    A    B    C    D    E
+             A 28.4  0.3  0.0  0.0  0.0
+             B  0.1 18.7  0.2  0.0  0.0
+             C  0.0  0.2 17.1  0.2  0.0
+             D  0.0  0.0  0.1 16.3  0.1
+             E  0.0  0.0  0.0  0.0 18.3
+                                
+     Accuracy (average) : 0.9874
+```
+
+```R
+modelFit2$finalModel
+``` 
+
+```R
+    Call:
+    randomForest(x = x, y = y, mtry = param$mtry, proximity = TRUE) 
                Type of random forest: classification
                      Number of trees: 500
-No. of variables tried at each split: 23
+    No. of variables tried at each split: 23
 
-        OOB estimate of  error rate: 0.91%
+            OOB estimate of  error rate: 0.91%
     Confusion matrix:
          A    B    C    D    E    class.error
     A 3338    6    1    1    2  0.002986858
@@ -273,6 +297,9 @@ No. of variables tried at each split: 23
     C    0   14 2031    9    0  0.011197663
     D    1    0   25 1903    1  0.013989637
     E    0    1    2    8 2154  0.005080831
+```
+
+adldl
 
     varImp(modelFit2, scale=TRUE)
     rf variable importance
@@ -1030,20 +1057,6 @@ produced by train, but this is a simple wrapper for the specic models previousl
                                 
      Accuracy (average) : 0.9817
     
-    > confusionMatrix(modelFit2)
-    Bootstrapped (25 reps) Confusion Matrix 
-    
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.4  0.3  0.0  0.0  0.0
-             B  0.1 18.7  0.2  0.0  0.0
-             C  0.0  0.2 17.1  0.2  0.0
-             D  0.0  0.0  0.1 16.3  0.1
-             E  0.0  0.0  0.0  0.0 18.3
-                                
-     Accuracy (average) : 0.9874
      
     
     install.packages("doParallel")
