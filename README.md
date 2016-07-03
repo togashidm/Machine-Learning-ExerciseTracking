@@ -832,14 +832,14 @@ I have also evaluated the other 4 models:  modelFit2a, modelFit2b, modelFit2c an
 
 ###Conclusions:
 In this report, it is shown how to download the data, look into it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). It was performed correlations between the variables to reduce the model complexity. The mains assumptions made for the proposed model is to be unpersonal and not time dependent. The initial 160 variables was reduced to 46. Final models shows that only 12 predictors could be used. Also, it was shown how to build a Machine Learning Model by using *caret* package, and how the parameters in the `train()` function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Foreste method, all the models in this work predict the same result in the 20 test cases, that is:
-'''R
+```R
   table(predict(modelFit2f, newdata = CaseDataTest))
-'''
-'''R
+```
+```R
 A B C D E 
 7 8 1 1 3 
-'''
-only 7 out of 20 shows the right way to perform the dumbbell lifting exercise.
+```
+Only 7 out of 20 shows the right way to perform the dumbbell lifting exercise.
 
 
 
