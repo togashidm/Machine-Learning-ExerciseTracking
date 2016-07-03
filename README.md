@@ -398,7 +398,7 @@ Now we can compare the prediction result of the testing set with the actual valu
 Therefore the accuray estimated for the model fit is 0.9932 which means that the estimation error is ca. 0.68%.
 
 ###Model Parameters Effect:
-1.  Selecting variables by Variable importance ranking:
+1.Selecting variables by Variable importance ranking:
 
 I tried to improve the model by changing the number of predictors. Based on the previous results, I reduced more of the number of variables by creating a cutoff point for the best variables by their importance:
 
@@ -508,7 +508,7 @@ I tried to improve the model by changing the number of predictors. Based on the 
 In this trial, the number of predictors selected in the final model was again decreased to **12 predictors**. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poorer than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). 
 
 
-2.  Cross-Validation type:
+2.Cross-Validation type:
 
 I also worked with 10-fold cross-validation (k=10). This resampling in general was much faster than bootstrap, that is, roughly ten-fold faster. As we can see in the results shown below, the accuracy is very similar to the "rf" but the OOB error is smaller that the original model. The following calculation uses the data with an importance variable cutoff of 10%.
 ```R
@@ -686,7 +686,7 @@ Performing the same calculation but now using the original data set with 46 vari
 This result is very welcoming because the accuracy is very similar to modelFit2 but the OOB error rate is small (0.86% vs 0.91%). But the most relevant is the modelling time. The CV resampling reduced the time from 5 hours to 30 minutes!
  
 
-3. Change the number of trees
+3.Change the number of trees
 
 We can obtain the relationship model error of classification and number of trees in the "Random Forest" model. For instance, the model modelFit2c (10-fold cross-validation with importance variable cutoff 10%) has the error related to the number of trees shown in Figure 3:
 ```R
