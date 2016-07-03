@@ -511,6 +511,7 @@ I tried to improve the model by changing the number of predictors. Based on the 
 In this trial, the number of predictors selected in the final model was again decreased to 12. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poor than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). 
 
 2. Change the number of trees
+
 We can obtain the relationship model error of classification and number of trees in the "Random Forest" model by:
 ```R
     library(reshape)
@@ -527,30 +528,23 @@ We can obtain the relationship model error of classification and number of trees
 We can see in Figure 3 that the error in all of them stablised early than ntree=500 (default). So, I decided to try a model fit with ntree=200.
 ```R
     date()
+    set.seed(10201)
     modelFit2h = train(Classe ~., data=trainData, method="rf", ntree=200, prox=TRUE)
     modelFit2h
     date()
 ```
  
- 
-I also worked with 10-fold cross-validation (k=10). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
+3.  Cross-Validation type:
+
+I also worked with 10-fold cross-validation (k=10). This resampling in general was much more faster than bootstrap, that is, roughly ten-folds fast. As we can see the results showed below, the accuracy is very similar to the "rf" but the OOB error is smaller that the original model.
 
 ```R
-    date()
     set.seed(10025)
     fitControl <- trainControl( method = "cv", number = 10)
     modelFit2f <- train(Classe ~ ., data = trainData, method="rf", trControl = fitControl)
-    date()
-    
-    > date()
-    [1] "Wed Jun 29 22:17:02 2016"
-    > set.seed(10025)
-    > fitControl <- trainControl( method = "cv", number = 10)
-    > modelFit2f <- train(Classe ~ ., data = trainData, method="rf", trControl = fitControl)
-    > date()
-    [1] "Wed Jun 29 22:48:25 2016"
-    > 
-    > modelFit2f
+    modelFit2f
+```
+```R
     Random Forest 
     
     11776 samples
@@ -569,8 +563,13 @@ I also worked with 10-fold cross-validation (k=10). Once the resampling was proc
     
     Accuracy was used to select the optimal model using  the largest value.
     The final value used for the model was mtry = 23. 
-    > modelFit2f$finalModel
-    
+```
+
+```R
+    modelFit2f$finalModel
+``` 
+
+```R
     Call:
      randomForest(x = x, y = y, mtry = param$mtry) 
                    Type of random forest: classification
@@ -585,8 +584,14 @@ I also worked with 10-fold cross-validation (k=10). Once the resampling was proc
     C    0   14 2031    9    0 0.011197663
     D    1    1   23 1904    1 0.013471503
     E    0    0    2    7 2156 0.004157044
-    > testPred <- predict(modelFit2f, newdata = testData)
-    > confusionMatrix(testData$Classe,testPred)
+```
+
+```R
+    testPred <- predict(modelFit2f, newdata = testData)
+    confusionMatrix(testData$Classe,testPred)
+```
+
+```R
     Confusion Matrix and Statistics
     
               Reference
@@ -618,14 +623,19 @@ I also worked with 10-fold cross-validation (k=10). Once the resampling was proc
     Detection Rate         0.2845   0.1916   0.1736   0.1606   0.1828
     Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
     Balanced Accuracy      0.9987   0.9972   0.9867   0.9957   0.9987
+```
+
     > save.image("~/machinelearning5.RData")
     
-
-
-###Discussion
+###Predicting the 20 test cases:
 
 
 ###Conclusions:
+In this report, it is shown how to download the data, look into it by analysing the data structure, tidying the data and reorganising for better variable description (CamelCase), to perform correlation between the variables to reduce the model complexity and making assumptions such as that the model is unpersonal and not time related. These preliminary data treatment reduced the initial 160 variables to 46. Also, it is shown how to build a Machine Learning Model by using *caret* package, and how the parameters in the `train()` function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model.
+
+However, using the Random Foreste method, all the model derived from "rf" give the same result in the 20 test cases, that is,
+
+
 As part of the Coursera assessment, the work described here are restricted to answer the followings:
 1.  To predict the manner in which the exercise was done.
 2.  To create a report describing how a proposed model was built (this present document).
@@ -634,11 +644,6 @@ As part of the Coursera assessment, the work described here are restricted to an
 5.  To discuss the assumptions made.
 6.  To apply the proposed model to predict 20 different test cases.
 
-
-###Remarks:
-
-*  The variables were labeled within CamelCase structure. The variables description of the NewTidyData is presented in the Appendix B.
-*  Codes applied here are described in Appendix C.
 
 ***************************************************
 ####Reference:
@@ -654,165 +659,8 @@ Journal of Statistical Software November 2008, Volume 28, Issue 5.
 http://topepo.github.io/caret/training.html
 http://will-stanton.com/machine-learning-with-r-an-irresponsibly-fast-tutorial/
 Predictive Analytics with Microsoft Azure Machine Learning 2nd Edition: Edition 2
-
-## Appendix A ##
-Variables original names:
-#####
-
-    X; user_name; raw_timestamp_part_1; raw_timestamp_part_2; cvtd_timestamp; new_window; num_window; roll_belt;
-    pitch_belt; yaw_belt; total_accel_belt; kurtosis_roll_belt; kurtosis_picth_belt; kurtosis_yaw_belt; skewness_roll_belt;
-    skewness_roll_belt.1; skewness_yaw_belt; max_roll_belt; max_picth_belt; max_yaw_belt; min_roll_belt; min_pitch_belt;
-    min_yaw_belt; amplitude_roll_belt; amplitude_pitch_belt; amplitude_yaw_belt; var_total_accel_belt; avg_roll_belt;
-    stddev_roll_belt; var_roll_belt; avg_pitch_belt; stddev_pitch_belt; var_pitch_belt; avg_yaw_belt; stddev_yaw_belt;
-    var_yaw_belt; gyros_belt_x; gyros_belt_y; gyros_belt_z; accel_belt_x; accel_belt_y; accel_belt_z; magnet_belt_x;
-    magnet_belt_y; magnet_belt_z; roll_arm; pitch_arm; yaw_arm; total_accel_arm; var_accel_arm; avg_roll_arm; stddev_roll_arm;
-    var_roll_arm; avg_pitch_arm; stddev_pitch_arm; var_pitch_arm; avg_yaw_arm; stddev_yaw_arm; var_yaw_arm; gyros_arm_x;
-    gyros_arm_y; gyros_arm_z; accel_arm_x; accel_arm_y; accel_arm_z; magnet_arm_x; magnet_arm_y; magnet_arm_z;
-    kurtosis_roll_arm; kurtosis_picth_arm; kurtosis_yaw_arm; skewness_roll_arm; skewness_pitch_arm; skewness_yaw_arm;
-    max_roll_arm; max_picth_arm; max_yaw_arm; min_roll_arm; min_pitch_arm; min_yaw_arm; amplitude_roll_arm;
-    amplitude_pitch_arm; amplitude_yaw_arm; roll_dumbbell; pitch_dumbbell; yaw_dumbbell; kurtosis_roll_dumbbell;
-    kurtosis_picth_dumbbell; kurtosis_yaw_dumbbell; skewness_roll_dumbbell; skewness_pitch_dumbbell; skewness_yaw_dumbbell;
-    max_roll_dumbbell; max_picth_dumbbell; max_yaw_dumbbell; min_roll_dumbbell; min_pitch_dumbbell; min_yaw_dumbbell;
-    amplitude_roll_dumbbell; amplitude_pitch_dumbbell; amplitude_yaw_dumbbell; total_accel_dumbbell; var_accel_dumbbell;
-    avg_roll_dumbbell; stddev_roll_dumbbell; var_roll_dumbbell; avg_pitch_dumbbell; stddev_pitch_dumbbell; var_pitch_dumbbell;
-    avg_yaw_dumbbell; stddev_yaw_dumbbell; var_yaw_dumbbell; gyros_dumbbell_x; gyros_dumbbell_y; gyros_dumbbell_z;
-    accel_dumbbell_x; accel_dumbbell_y; accel_dumbbell_z; magnet_dumbbell_x; magnet_dumbbell_y; magnet_dumbbell_z;
-    roll_forearm; pitch_forearm; yaw_forearm; kurtosis_roll_forearm; kurtosis_picth_forearm; kurtosis_yaw_forearm;
-    skewness_roll_forearm; skewness_pitch_forearm; skewness_yaw_forearm;max_roll_forearm; max_picth_forearm; max_yaw_forearm;
-    min_roll_forearm; min_pitch_forearm; min_yaw_forearm; amplitude_roll_forearm; amplitude_pitch_forearm;
-    amplitude_yaw_forearm; total_accel_forearm; var_accel_forearm; avg_roll_forearm; stddev_roll_forearm; var_roll_forearm;
-    avg_pitch_forearm; stddev_pitch_forearm; var_pitch_forearm; avg_yaw_forearm; stddev_yaw_forearm; var_yaw_forearm;
-    gyros_forearm_x; gyros_forearm_y; gyros_forearm_z; accel_forearm_x; accel_forearm_y; accel_forearm_z; magnet_forearm_x;
-    magnet_forearm_y; magnet_forearm_z; classe;
-
-Variables names in NewTidyData:
-
-    X;UserName;RawTimestampPart_1;RawTimestampPart_2;CvtdTimestamp
-    NewWindow;NumWindow;RollBelt;PitchBelt;YawBelt
-    TotalAccelBelt;KurtosisRollBelt;KurtosisPicthBelt;KurtosisYawBelt;SkewnessRollBelt
-    SkewnessRollBelt.1;SkewnessYawBelt;MaxRollBelt;MaxPicthBelt;MaxYawBelt
-    MinRollBelt;MinPitchBelt;MinYawBelt;AmplitudeRollBelt;AmplitudePitchBelt
-    AmplitudeYawBelt;VarTotalAccelBelt;AvgRollBelt;StddevRollBelt;VarRollBelt
-    AvgPitchBelt;StddevPitchBelt;VarPitchBelt;AvgYawBelt;StddevYawBelt
-    VarYawBelt;GyrosBeltX;GyrosBeltY;GyrosBeltZ;AccelBeltX
-    AccelBeltY;AccelBeltZ;MagnetBeltX;MagnetBeltY;MagnetBeltZ
-    RollArm;PitchArm;YawArm;TotalAccelArm;VarAccelArm
-    AvgRollArm;StddevRollArm;VarRollArm;AvgPitchArm;StddevPitchArm
-    VarPitchArm;AvgYawArm;StddevYawArm;VarYawArm;GyrosArmX
-    GyrosArmY;GyrosArmZ;AccelArmX;AccelArmY;AccelArmZ
-    MagnetArmX;MagnetArmY;MagnetArmZ;KurtosisRollArm;KurtosisPicthArm
-    KurtosisYawArm;SkewnessRollArm;SkewnessPitchArm;SkewnessYawArm;MaxRollArm
-    MaxPicthArm;MaxYawArm;MinRollArm;MinPitchArm;MinYawArm
-    AmplitudeRollArm;AmplitudePitchArm;AmplitudeYawArm;RollDumbbell;PitchDumbbell
-    YawDumbbell;KurtosisRollDumbbell;KurtosisPicthDumbbell;KurtosisYawDumbbell;SkewnessRollDumbbell
-    SkewnessPitchDumbbell;SkewnessYawDumbbell;MaxRollDumbbell;MaxPicthDumbbell;MaxYawDumbbell
-    MinRollDumbbell;MinPitchDumbbell;MinYawDumbbell;AmplitudeRollDumbbell;AmplitudePitchDumbbell
-    AmplitudeYawDumbbell;TotalAccelDumbbell;VarAccelDumbbell;AvgRollDumbbell;StddevRollDumbbell
-    VarRollDumbbell;AvgPitchDumbbell;StddevPitchDumbbell;VarPitchDumbbell;AvgYawDumbbell
-    StddevYawDumbbell;VarYawDumbbell;GyrosDumbbellX;GyrosDumbbellY;GyrosDumbbellZ
-    AccelDumbbellX;AccelDumbbellY;AccelDumbbellZ;MagnetDumbbellX;MagnetDumbbellY
-    MagnetDumbbellZ;RollForearm;PitchForearm;YawForearm;KurtosisRollForearm
-    KurtosisPicthForearm;KurtosisYawForearm;SkewnessRollForearm;SkewnessPitchForearm;SkewnessYawForearm
-    MaxRollForearm;MaxPicthForearm;MaxYawForearm;MinRollForearm;MinPitchForearm
-    MinYawForearm;AmplitudeRollForearm;AmplitudePitchForearm;AmplitudeYawForearm;TotalAccelForearm
-    VarAccelForearm;AvgRollForearm;StddevRollForearm;VarRollForearm;AvgPitchForearm
-    StddevPitchForearm;VarPitchForearm;AvgYawForearm;StddevYawForearm;VarYawForearm
-    GyrosForearmX;GyrosForearmY;GyrosForearmZ;AccelForearmX;AccelForearmY
-    AccelForearmZ;MagnetForearmX;MagnetForearmY;MagnetForearmZ;Classe
-
-
-
-## Appendix B ##
-
-
-## Appendix C ##
-
-    library("dplyr")
-
-#####   if you don't have the package use: install.packages("dplyr")
-
-    fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
-    download.file(fileUrl, destfile="./pml-training.csv") 
-    pml.training <- read.csv("pml-training.csv",header=TRUE, na.strings=c("","NA","#DIV/0!"))
-    
-    fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
-    download.file(fileUrl, destfile="./pml-testing.csv") 
-    pml.testing <- read.csv("pml-testing.csv",header=TRUE)
-
-#### Cleaning the non-alphanumeric characters, and using CamelCase structure
-
-temp=names(pml.training)
-temp=gsub("^a","A",temp); temp=gsub("^c","C",temp); temp=gsub("^c","C",temp); temp=gsub("^g","G",temp);
-temp=gsub("^k","K",temp); temp=gsub("^m","M",temp); temp=gsub("^n","N",temp); temp=gsub("^p","P",temp);
-temp=gsub("^r","R",temp); temp=gsub("^s","S",temp); temp=gsub("^t","T",temp); temp=gsub("^u","U",temp);
-temp=gsub("^v","V",temp); temp=gsub("^y","Y",temp); temp=gsub("_a","A",temp); temp=gsub("_b","B",temp);
-temp=gsub("_c","C",temp); temp=gsub("_d","D",temp); temp=gsub("_f","F",temp); temp=gsub("_g","G",temp);
-temp=gsub("_k","K",temp); temp=gsub("_m","M",temp); temp=gsub("_n","N",temp); temp=gsub("_p","P",temp);
-temp=gsub("_r","R",temp); temp=gsub("_s","S",temp); temp=gsub("_t","T",temp); temp=gsub("_u","U",temp);
-temp=gsub("_v","V",temp); temp=gsub("_x","X",temp); temp=gsub("_y","Y",temp); temp=gsub("_w","W",temp);
-temp=gsub("_z","Z",temp); temp=gsub("_1","1",temp); temp=gsub("_2","2",temp);
-TidyData = pml.training
-colnames(TidyData) = temp
-
-####*removing variables that contain more than 95% of 'NA'*
-NewTidyData1 = TidyData[, colSums(is.na(TidyData))/nrow(TidyData) < 0.95]
-dim(NewTidyData1)
-
-####*removing observables that contain "NA"
-temp = TidyData[, colSums(is.na(TidyData))/nrow(TidyData) > 0.95]
-NewTidyData2 = temp[, colSums(is.na(temp))/nrow(temp) != 1]
-NewTidyData2 = na.omit(NewTidyData2)
-dim(NewTidyData2)
-
-####*removed variables that only have NA:*
-setdiff(names(temp),names(NewTidyData2))
-
-####*remained variables:*
-str(NewTidayData)
-
-####*with the selected features*
-
-
-temp=select(NewTidyData,UserName,Classe,starts_with('Var'),starts_with('Avg'))
-plot(temp[,c(19:30)], colour=temp$Classe,rm.na=TRUE)
-
-splom( ~ temp[,19:30] | temp$UserName, cex=0.8, pch=16,tick.labels=FALSE)
-levels(temp$Classe) <- c("red","blue","green","black","orange")
-
-pairs(temp[,19:30], cex=0.8, pch=21, bg =c("black","red", "green3", "blue","orange")[unclass(temp$Classe)], oma=c(8,3,3,3))
-par(xpd = TRUE)
-legend("bottom", fill = unique(temp$Classe), legend = c(levels(temp$Classe)), horiz=TRUE, bty='n')
-
-featurePlot(x=temp[,19:30], y=temp$Classe, plot="pairs", auto.key=list(columns=5))
-
-(Takes long time)
-splom( ~ temp[,19:30] | temp$UserName, cex=0.7, groups=as.factor(temp$Classe),type="p", pch=16, scales=list(x=list(at=NULL)), auto.key=list(space="right", columns=1, points=FALSE, rectangles=TRUE, cex.title=1))
- 
-
-Next, after splitting the data into training and testing sets and using the caret package to automate training and testing both random forest and partial least squares models using repeated 10-fold cross-validation (see the code), it turns out random forest outperforms PLS in this case, and performs fairly well overall:
-
-
-####*Verify if there is any "NA". If there is it can use na.rm = TRUE in mean()*
-    sum(is.na(NewTidyData))
-
-temp2=select(NewTidyData,UserName,Classe,starts_with('Var'),starts_with('Avg'))
-
-library("caret")
-set.seed(123)
-inTrain <- createDataPartition(NewTidyData1$Class, p = 0.6, list = FALSE)
-trainTidyData <- NewTidyData1[inTrain,]
-testTidyData <- NewTidyData1[-inTrain,]
-
-modelFit = train(Classe ~., data=trainTidyData, method="rf", prox=TRUE)
-modelfFit
-
-test = test[apply(test, 1, function(x) !any(x == '#DIV/0!')), ] 
-
-
-impVar = as.data.frame(varImp(modelFit2, scale=TRUE)[1])
-a = cbind(Variables = rownames(impVar),impVar)
-impVarOrd = arrange(a,desc(Overall))
-write.csv(b,"varImp_modelFit2.csv")
-
+http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
+https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#hr
+http://hplgit.github.io/teamods/bitgit/html-github/._main_bitgit002.html
 
 
