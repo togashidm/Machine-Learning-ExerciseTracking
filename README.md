@@ -2,7 +2,7 @@
 ***************************************************
 
 ###Summary:
-Nowadays, to improve the quality of life  more and more people are practising sports.Prcatice not only improves the body's physical condition or fitness but also decreases the likelihood of many ills related to a sedentary life style, such as heart disease. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercise when done in the wrong way, may be less effective. But on the other hand they can also be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
+Nowadays, to improve the quality of life  more and more people are practising sports.Practice not only improves the body's physical condition or fitness but also decreases the likelihood of many ills related to a sedentary life style, such as heart disease. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercise when done in the wrong way, may be less effective. But on the other hand they can also be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
 This project is based on the work made by Veloso *et al.* "Qualitative Activity Recognition of Weight Lifting Exercises". The authors mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg) weight. Five different ways (where only one is correct) to perform the lifting exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedback to the user in real-time; increasing the likelihood of the exercise effectiveness. 
 
 ###Scope:
@@ -15,11 +15,8 @@ As part of the Coursera assessment, the report described here are restricted to 
 *   Apply the proposed model to predict 20 different test cases.
 
 ###Experiment description: 
-Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of the Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, each one providing 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell. 
-<p align="center">
-<image src= "https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png" width="250">
-  </p>
-
+Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of the Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, each one providing 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell.
+![](https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png")
 The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way (class A below) and the others the wrong way (classes B to E below):
 - Class A - The right exercise (*i.e*., exactly according to the specification)
 - Class B - Throwing the elbows to the front
