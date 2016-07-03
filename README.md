@@ -36,6 +36,7 @@ The volunteers were male participants aged between 20-28 years. They performed o
 ```R
     fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
     download.file(fileUrl, destfile="./pml-training.csv")
+    
     fileUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
     download.file(fileUrl, destfile="./pml-testing.csv")
 ```
@@ -50,7 +51,9 @@ The volunteers were male participants aged between 20-28 years. They performed o
 
 ```R
 str(pml.training, list.len=20)
+```
 
+```R
 'data.frame':	19622 obs. of  160 variables:
  $ X                       : int  1 2 3 4 5 6 7 8 9 10 ...
  $ user_name               : Factor w/ 6 levels "adelmo","carlitos",..: 2 2 2 2 2 2 2 2 2 2 ...
@@ -137,20 +140,29 @@ The data was cleaned and the variables re-labelled by using *CamelCase* structur
 Also, form the data structure we observed that there are missing values ("NA") in the data. We can check if the proportion is relevant by 
 ```R
     mean(is.na(TidyData))
+```
+```R
     [1] 0.6131835
 ```
 Over 61% of the data is missed, which is a very significant proportion. So, we can set a threshold to remove variables that contain more than 95% of "NA", for example:
 ```R
     NewTidyData1 = TidyData[, colSums(is.na(TidyData))/nrow(TidyData) < 0.95]
     dim(NewTidyData1)
-    [1] 19622    60
-    
-    mean(is.na(NewTidyData1))
-    [1] 0
+``` 
+```R
+   [1] 19622    60
+```
+```R
+   mean(is.na(NewTidyData1))
+``` 
+```R
+   [1] 0
 ```
 The `NewTidyData1` now does not contain any missed value. The first 20 rows of data structure of the `NewTidyData1`:
 ```R
  str(NewTidyData1, list.len=20)
+``` 
+```R
 'data.frame':	19622 obs. of  60 variables:
  $ X                 : int  1 2 3 4 5 6 7 8 9 10 ...
  $ UserName          : Factor w/ 6 levels "adelmo","carlitos",..: 2 2 2 2 2 2 2 2 2 2 ...
@@ -179,6 +191,8 @@ From the initial 160, there are a total of 60 variables. We can still reduce the
     library(dplyr)
     SelectData = select(NewTidyData1,-c(X:NumWindow))
     dim(SelectData)
+```
+```R    
     [1] 19622    53
 ```
 Therefore, the number of variables is reduced to 53.
@@ -200,13 +214,17 @@ can plot the the entiry data set to visualise those correlations (See Figure 1).
     
     highCor <-  findCorrelation(corMatrix, threshold) #sub set those that thas correlation >, = 0.9, or < -0.9
     highCorRm   <-  row.names(corMatrix)[highCor]
-    
     highCorRm
+``` 
+```R
     [1] "AccelBeltZ"    "RollBelt"       "AccelBeltY"     "AccelBeltX"     
         "GyrosDumbbellX" "GyrosDumbbellZ"  "GyrosArmX"
-
+``` 
+```R
     SelectData2 <- SelectData[, -highCor]
     dim(SelectData2)
+``` 
+```R
     [1] 19622    46
 ```
 <p align="center">
@@ -232,11 +250,9 @@ Caret Package has tools to perfom, k-fold cross-validation (once or repeated), l
 
 I worked with two type of resampling to evaluate the performance: Bootstrap (default) and k-fold cross-validation (once or repeated). Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
 ```R
+    set.seed(3023)
     modelFit2 = train(Classe ~., data=trainData, method="rf", prox=TRUE)
-```
-
-```R
-modelFit2
+    modelFit2
 ```
 
 ```R
@@ -250,33 +266,14 @@ modelFit2
     Resampling results across tuning parameters:
 
     mtry  Accuracy   Kappa    
-    2    0.9856378  0.9818241
+    2     0.9856378  0.9818241
     23    0.9874277  0.9840903
     45    0.9752460  0.9686771
 
     Accuracy was used to select the optimal model using  the largest value.
     The final value used for the model was mtry = 23. 
 ```
-
-```R
-confusionMatrix(modelFit2)
-``` 
-
-```R
-    Bootstrapped (25 reps) Confusion Matrix 
-    
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.4  0.3  0.0  0.0  0.0
-             B  0.1 18.7  0.2  0.0  0.0
-             C  0.0  0.2 17.1  0.2  0.0
-             D  0.0  0.0  0.1 16.3  0.1
-             E  0.0  0.0  0.0  0.0 18.3
-                                
-     Accuracy (average) : 0.9874
-```
+Accuracy is the default metric selected to be optimized in `train()` for categorical variables, in this case, "Classe". The proposed model show that 23 predictors were need to get the best accuracy on the training set. This number of predictor is then used in the final model. The "out-of-bag" (OOB) error rate of the final model can be obtained by:
 
 ```R
 modelFit2$finalModel
@@ -299,41 +296,73 @@ modelFit2$finalModel
     E    0    1    2    8 2154  0.005080831
 ```
 
-adldl
+However the better error estimates is obtained by using the testing set (as I show in the Evaluation section). We can also calculate the variable importance in the model by using the caret package `varImp` function:
 
-    varImp(modelFit2, scale=TRUE)
-    rf variable importance
-
-    only 20 most important variables shown (out of 45)
-
-                       Overall
-    YawBelt             100.00
-    PitchForearm         86.89
-    PitchBelt            71.89
-    MagnetDumbbellZ      63.81
-    MagnetDumbbellY      51.95
-    RollForearm          50.97
-    MagnetBeltY          46.42
-    MagnetBeltZ          29.86
-    GyrosBeltZ           28.77
-    MagnetDumbbellX      28.23
-    AccelDumbbellY       27.33
-    RollDumbbell         27.13
-    AccelForearmX        21.55
-    MagnetBeltX          19.06
-    AccelDumbbellZ       19.02
-    TotalAccelDumbbell   18.92
-    AccelForearmZ        17.06
-    MagnetForearmZ       15.57
-    TotalAccelBelt       15.14
-    YawArm               14.18
+```R
+    varImp(modelFit2, scale=TRUE)[[1]]
 ```
+```R
+                        Overall
+    PitchBelt           71.88966676
+    YawBelt            100.00000000
+    TotalAccelBelt      15.13943598
+    GyrosBeltX           4.10645743
+    GyrosBeltY           4.29909507
+    GyrosBeltZ          28.77409715
+    MagnetBeltX         19.06090724
+    MagnetBeltY         46.42143718
+    MagnetBeltZ         29.86221750
+    RollArm             13.36456325
+    PitchArm             5.30347638
+    YawArm              14.18155500
+    TotalAccelArm        2.06975968
+    GyrosArmY            7.26378887
+    GyrosArmZ            0.00000000
+    AccelArmX            6.52209427
+    AccelArmY            6.87352864
+    AccelArmZ            2.89186020
+    MagnetArmX           8.30696563
+    MagnetArmY           9.05507339
+    MagnetArmZ           7.15700321
+    RollDumbbell        27.13032649
+    PitchDumbbell        6.15535378
+    YawDumbbell         11.93242077
+    TotalAccelDumbbell  18.91942501
+    GyrosDumbbellY      10.63841552
+    AccelDumbbellX       7.25232796
+    AccelDumbbellY      27.33024178
+    AccelDumbbellZ      19.02170061
+    MagnetDumbbellX     28.23072724
+    MagnetDumbbellY     51.95465439
+    MagnetDumbbellZ     63.81343801
+    RollForearm         50.97284067
+    PitchForearm        86.88962083
+    YawForearm           7.33542669
+    TotalAccelForearm    2.41288158
+    GyrosForearmX        0.02460776
+    GyrosForearmY        3.64303343
+    GyrosForearmZ        0.95471639
+    AccelForearmX       21.54543983
+    AccelForearmY        3.55059378
+    AccelForearmZ       17.05528477
+    MagnetForearmX       9.02319380
+    MagnetForearmY       7.14137478
+    MagnetForearmZ      15.57428210
+```
+We can also get the plot of the variable importance by `plot(varImp(modelFit2, scale=TRUE))`. See Figure 2.
 
-**iv) Model Evaluation**
+
+**5.4.    Model Evaluation**
+The evalution of the training fit model can be made by using the caret `predict()`function on the testing set:
 ```R
     testPred <- predict(modelFit2, newdata = testData)
+```
+Now we can compare the prediction result of the testing set with the actual values by using the `confusionMatrix()` function:
+```R
     confusionMatrix(testData$Classe,testPred)
+```
 
+```R
     Confusion Matrix and Statistics
 
               Reference
@@ -967,97 +996,7 @@ produced by train, but this is a simple wrapper for the specic models previousl
     Balanced Accuracy      0.9987   0.9972   0.9867   0.9957   0.9987
     > save.image("~/machinelearning5.RData")
     
-    > confusionMatrix(modelFit2f)
-    Cross-Validated (10 fold) Confusion Matrix 
     
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.3  0.2  0.0  0.0  0.0
-             B  0.1 19.0  0.1  0.0  0.0
-             C  0.0  0.1 17.2  0.2  0.0
-             D  0.0  0.0  0.1 16.2  0.1
-             E  0.0  0.0  0.0  0.0 18.3
-                                
-     Accuracy (average) : 0.9899
-    
-    > confusionMatrix(modelFit2e)
-    Cross-Validated (20 fold) Confusion Matrix 
-    
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.3  0.2  0.0  0.0  0.0
-             B  0.1 18.9  0.1  0.0  0.0
-             C  0.0  0.2 17.2  0.2  0.0
-             D  0.0  0.0  0.1 16.2  0.1
-             E  0.0  0.0  0.0  0.0 18.3
-                                
-     Accuracy (average) : 0.9882
-    
-    > confusionMatrix(modelFit2d)
-    Cross-Validated (3 fold) Confusion Matrix 
-    
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.2  0.2  0.0  0.0  0.0
-             B  0.1 18.9  0.2  0.0  0.0
-             C  0.1  0.2 17.1  0.3  0.0
-             D  0.0  0.0  0.2 16.0  0.1
-             E  0.0  0.0  0.0  0.1 18.2
-                                
-     Accuracy (average) : 0.9839
-    
-    > confusionMatrix(modelFit2c)
-    Cross-Validated (10 fold) Confusion Matrix 
-    
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.3  0.2  0.0  0.0  0.0
-             B  0.1 18.9  0.2  0.0  0.0
-             C  0.0  0.2 17.1  0.2  0.0
-             D  0.0  0.0  0.2 16.2  0.1
-             E  0.0  0.0  0.0  0.0 18.3
-                                
-     Accuracy (average) : 0.9873
-    
-    > confusionMatrix(modelFit2b)
-    Cross-Validated (10 fold) Confusion Matrix 
-    
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.3  0.2  0.0  0.0  0.0
-             B  0.1 18.9  0.2  0.0  0.0
-             C  0.0  0.3 17.1  0.2  0.0
-             D  0.0  0.0  0.2 16.2  0.1
-             E  0.0  0.0  0.0  0.0 18.3
-                                
-     Accuracy (average) : 0.9872
-    
-    > confusionMatrix(modelFit2a)
-    Bootstrapped (25 reps) Confusion Matrix 
-    
-    (entries are percentual average cell counts across resamples)
-     
-              Reference
-    Prediction    A    B    C    D    E
-             A 28.3  0.3  0.0  0.0  0.0
-             B  0.2 18.6  0.2  0.0  0.0
-             C  0.0  0.3 16.9  0.3  0.1
-             D  0.0  0.0  0.2 16.0  0.1
-             E  0.0  0.0  0.0  0.0 18.4
-                                
-     Accuracy (average) : 0.9817
-    
-     
     
     install.packages("doParallel")
     library(parallel)
