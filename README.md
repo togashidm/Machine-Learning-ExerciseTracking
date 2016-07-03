@@ -2,8 +2,8 @@
 ***************************************************
 
 ###Summary:
-Nowadays, to improve the life quality more and more people are practising sports. The practising not only improve the body physical conditions or fitness but also decrease the likelihood of many ills related to sedentary life style, such as heart diseases. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercises when are done in the wrong way, they are, on one hand, less effective. On the other hand they can be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
-This project is based on the work made by Veloso *et al.* "Qualitative Activity Recognition of Weight Lifting Exercises". The authors have mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg). Five different ways (only one correct) to perform the lift exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedback the user at real-time; increasing the likelihood of the exercise effectiveness. 
+Nowadays, to improve the quality of life  more and more people are practising sports.Prcatice not only improves the body's physical condition or fitness but also decreases the likelihood of many ills related to a sedentary life style, such as heart disease. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercise when done in the wrong way, may be less effective. But on the other hand they can also be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
+This project is based on the work made by Veloso *et al.* "Qualitative Activity Recognition of Weight Lifting Exercises". The authors mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg) weight. Five different ways (where only one is correct) to perform the lifting exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedback to the user in real-time; increasing the likelihood of the exercise effectiveness. 
 
 ###Scope:
 As part of the Coursera assessment, the report described here are restricted to answer the followings:
@@ -15,12 +15,12 @@ As part of the Coursera assessment, the report described here are restricted to 
 *   Apply the proposed model to predict 20 different test cases.
 
 ###Experiment description: 
-Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell. 
+Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of the Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, each one providing 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell. 
 <p align="center">
 <image src= "https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png" width="250">
   </p>
 
-The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way and the others in wrong way:
+The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way (class A below) and the others the wrong way (classes B to E below):
 - Class A - The right exercise (*i.e*., exactly according to the specification)
 - Class B - Throwing the elbows to the front
 - Class C - Lifting the dumbbell only halfway 
@@ -76,7 +76,7 @@ str(pml.training, list.len=20)
   [list output truncated]
 ```
 
-Raw data variables for each sensor per location recorded as follow:
+Raw data variables for each sensor per location are recorded as follows:
 *   Triaxial accelerometer:
     -   3 (x,y,z) x 4 (locations) = 12  
 *   Triaxial gyroscope:
@@ -86,13 +86,13 @@ Raw data variables for each sensor per location recorded as follow:
 
 A total of 36 raw data variables were then recorded.
 
-It was recorded also "fusion" variables obtained form the raw data variables:
+"Fusion" variables obtained from the raw data variables were also recorded:
 *   Three Rotational angles (roll, pitch, yaw) per location:
     -   3  x 4 (locations) = 12
 *   Total acceleration per location:
     -   1  x 4 (locations) = 4
 
-The data of accelerometer, magnetometer and gyroscope are "fused" by using a Direction Cosine Matrix (DCM) algorithm in the Razor IMU, that means a total of 16 "fused" variables are recorded. Furthermore, in some of "fused" variables, the following *descriptive statistics* variables ("stat") were recorded:
+The data froam accelerometer, magnetometer and gyroscope are "fused" by using a Direction Cosine Matrix (DCM) algorithm in the Razor IMU, that means a total of 16 "fused" variables are recorded. Furthermore, in some of the "fused" variables, the following *descriptive statistics* variables ("stat") were recorded:
 *   Max, Min, standard deviation(stddev), variance(var), average(avg) of rotational angles:
     -   5 x 12 = 60      
 *   Amplitude of rotational angles (amplitude):
@@ -114,7 +114,7 @@ The remainder variables:
 A total of 8 remainder variables.
 In summary, the experiment recorded a total number of 160 (36 + 16 + 100 + 8) variables.
 
-Each individual performed 5 "classes" of exercises. Each exercise was repeat 10 times. All together derived a total of 19642 recorded observables, which were then split by Coursera into two files:
+Each individual performed 5 "classes" of exercises. Each exercise was repeated 10 times. All together a total of 19642 recorded observables were derived, which were then split by Coursera into two files:
 *  train set to create the Model loaded as "pml.training" is a dataframe of 19622 x 160 
 *  test set to answer the Quiz loaded as "pml.testing"  is a dataframe of 20 x 160
 
@@ -135,14 +135,14 @@ The data was cleaned and the variables re-labelled by using *CamelCase* structur
     TidyData = pml.training
     colnames(TidyData) = temp
 ```
-Also, form the data structure we observed that there are missing values ("NA") in the data. We can check if the proportion is relevant by 
+Also, from the data structure we observe that there are missing values ("NA") in the data. We can check if the proportion is relevant using
 ```R
     mean(is.na(TidyData))
 ```
 ```R
     [1] 0.6131835
 ```
-Over 61% of the data is missed, which is a very significant proportion. So, we can set a threshold to remove variables that contain more than 95% of "NA", for example:
+Over 61% of the data is missing, which is a very significant proportion. So, we can set a threshold to remove variables that contain more than 95% of "NA", for example:
 ```R
     NewTidyData1 = TidyData[, colSums(is.na(TidyData))/nrow(TidyData) < 0.95]
     dim(NewTidyData1)
@@ -156,7 +156,7 @@ Over 61% of the data is missed, which is a very significant proportion. So, we c
 ```R
    [1] 0
 ```
-The `NewTidyData1` now does not contain any missed value. The first 20 rows of data structure of the `NewTidyData1`:
+The `NewTidyData1` now does not contain any missing values. The first 20 rows of data structure of the `NewTidyData1`:
 ```R
  str(NewTidyData1, list.len=20)
 ``` 
@@ -184,7 +184,7 @@ The `NewTidyData1` now does not contain any missed value. The first 20 rows of d
  $ MagnetBeltZ       : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
   [list output truncated]    
 ```
-From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **_assuming_** that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercised was performed. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
+From the initial 160, there are a total of 60 variables. We can still reduce the number of variables **_assuming_** that the prediction is not time and individual dependent, that is, independent of the person and the time that the exercises was performed. Then, variables such as: *"UserName", "RawTimestampPart1", "RawTimestampPart2", "CvtdTimestamp", "NewWindow" and "NumWindow"* can be removed together with the index *"X"* variable:
 ```R
     library(dplyr)
     SelectData = select(NewTidyData1,-c(X:NumWindow))
@@ -199,12 +199,12 @@ Therefore, the number of variables is reduced to 53.
 
 **5.	Propose Machine learning models base on the exploratory data**
 
-I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classification and regression models. Caret also provides means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.
+I used the *caret* package in this work. Caret stands for Classification And REgression Training. It is a great toolkit to build  classification and regression models. Caret also provides the means for: Data preparation, Data splitting, Training a Model, Model evaluation, and  Variable selection.
 
 **5.1.    Data Preparation - Removing redundant variables by a correlation matrix**
 
-The data variables may be correlated to each other, which it may lead to redundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix of between the data variables. The function 
-can plot the the entity data set to visualise those correlations (See Figure 1).  The plot makes less difficult the choice for threshold of the correlation coefficient in  order to remove the redundant variables. I choose that a absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.
+The data variables may be correlated to each other, which it may lead to redundancy in the model (*_assumption_*). By using `findCorrelation` from the *caret* package, we can obtain the correlation matrix between the data variables. The function 
+can plot the entity data set to visualise those correlations (See Figure 1).  The plot makes it less difficult to choose the threshold of the correlation coefficient in  order to remove redundant variables. I chose an absolute value for correlation coefficient of 0.90 as the threshold. Seven (7) other variables can be dropped.
 ```R
     library(caret)
     library(corrplot)
@@ -245,7 +245,7 @@ The *caret* function `createDataPartition` is used to randomly split the data se
 ```
 **5.3.  Training a Model/Tuning Parameters/Variable Selection**
 
-As the main question of this assignment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are chosen, the type of resampling need to be opted. Caret Package has tools to perform, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap (**default**) resampling. Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
+As the main question of this assignment is about classification, I choose Random Forest ("rf") to build the model. Tuning the model means to choose a set of parameters to be evaluated. Once the model and tuning parameters are chosen, the type of resampling needs to be opted for. Caret Package has tools to perform, k-fold cross-validation (once or repeated), leave-one-out cross-validation and bootstrap (**default**) resampling. Once the resampling was processed, the caret `train` function automatically chooses the best tuning parameters associated to the model.
 
 ```R
     set.seed(3023)
@@ -271,7 +271,7 @@ As the main question of this assignment is about classification, I choose Random
     Accuracy was used to select the optimal model using  the largest value.
     The final value used for the model was mtry = 23. 
 ```
-Accuracy is the default metric selected to be optimized in `train()` for categorical variables, in this case, "Classe". The proposed model show that 23 predictors were need to get the best accuracy on the training set. In order words, `caret` has optimised the model and concluded that selecting 23 most important predictors gives the best accuracy. The "out-of-bag" (OOB) error rate of the final model can be obtained by:
+Accuracy is the default metric selected to be optimized in `train()` for categorical variables, in this case, "Classe". The proposed model shows that 23 predictors were needed to get the best accuracy on the training set. In order words, `caret` has optimised the model and concluded that selecting 23 most important predictors gives the best accuracy. The "out-of-bag" (OOB) error rate of the final model can be obtained by:
 
 ```R
 modelFit2$finalModel
@@ -347,7 +347,7 @@ However the better error estimates is obtained by using the testing set (as I sh
     MagnetForearmY       7.14137478
     MagnetForearmZ      15.57428210
 ```
-We can also get the plot of the variable importance sorted in descendent order by `plot(varImp(modelFit2, scale=TRUE))`. See Figure 2.
+We can also get the plot of the variable importance sorted in descending order by `plot(varImp(modelFit2, scale=TRUE))`. See Figure 2.
 <p align="center">
   <img src="https://raw.githubusercontent.com/anonymous-1618/ML/master/Fig2.png">
   <b>Figure 2 - </b>Variable Importance</b><br>
@@ -401,7 +401,7 @@ Therefore the accuray estimated for the model fit is 0.9932 which means that the
 ###Model Parameters Effect:
 1.  Selecting variables by Variable importance ranking:
 
-I tried to improve the model by changing the number of predictors. Based on the previous results, I reduced more the number of variables by creating a cutoff point for the best variables by their importance:
+I tried to improve the model by changing the number of predictors. Based on the previous results, I reduced more of the number of variables by creating a cutoff point for the best variables by their importance:
 
 ```R
     library(dplyr)
@@ -506,12 +506,12 @@ I tried to improve the model by changing the number of predictors. Based on the 
         Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
         Balanced Accuracy      0.9988   0.9965   0.9857   0.9921   0.9980
 ```        
-In this trial, the number of predictors selected in the final model was again decreased to **12 predictors**. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poor than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). 
+In this trial, the number of predictors selected in the final model was again decreased to **12 predictors**. This makes the model less complex. However, the OOB error rate (1.07%) and the test accuracy (0.9915) are slightly poorer than the original model. Also, the calculation time increased by half hour (ca. 5.5 h). 
 
 
 2.  Cross-Validation type:
 
-I also worked with 10-fold cross-validation (k=10). This resampling in general was much more faster than bootstrap, that is, roughly ten-folds fast. As we can see the results showed below, the accuracy is very similar to the "rf" but the OOB error is smaller that the original model. The following calculation uses the data with importance variable cutoff of 10%.
+I also worked with 10-fold cross-validation (k=10). This resampling in general was much faster than bootstrap, that is, roughly ten-fold faster. As we can see in the results shown below, the accuracy is very similar to the "rf" but the OOB error is smaller that the original model. The following calculation uses the data with an importance variable cutoff of 10%.
 ```R
     set.seed(1825)
     fitControl <- trainControl( method = "cv", number = 10)
@@ -684,12 +684,12 @@ Performing the same calculation but now using the original data set with 46 vari
     Detection Prevalence   0.2845   0.1935   0.1744   0.1639   0.1838
     Balanced Accuracy      0.9987   0.9972   0.9867   0.9957   0.9987
 ```
-This result is very welcoming because the accuracy is very similar to modelFit2 but the OOB error rate is small (0.86% vs 0.91%). But the most relevant is the modelling time. The CV resampling reduce the time from 5 hours to 30 minutes!
+This result is very welcoming because the accuracy is very similar to modelFit2 but the OOB error rate is small (0.86% vs 0.91%). But the most relevant is the modelling time. The CV resampling reduced the time from 5 hours to 30 minutes!
  
 
 3. Change the number of trees
 
-We can obtain the relationship model error of classification and number of trees in the "Random Forest" model. For instance, the model modelFit2c (10-fold cross-validation with importance variable cutoff 10%) has the error related to the number of trees showed in Figure 3:
+We can obtain the relationship model error of classification and number of trees in the "Random Forest" model. For instance, the model modelFit2c (10-fold cross-validation with importance variable cutoff 10%) has the error related to the number of trees shown in Figure 3:
 ```R
     library(reshape)
     df.melted <- melt(modelFit2c$finalModel$err.rate, id = "ntree")
@@ -790,7 +790,7 @@ We can see in Figure 3 that the error in all of them stabilised early than ntree
     Balanced Accuracy      0.9985   0.9962   0.9842   0.9920   0.9982
 ```
     
-The accuracy did not change by much, but the OOB error rate was the highest of the all evaluated models (1.26%). On the other hand, it was the fitted model that took less time (~ 6 minutes). 
+The accuracy did not change by much, but the OOB error rate was the highest of all the evaluated models (1.26%). On the other hand, it was the fitted model that took less time (~ 6 minutes). 
     
 ###Predicting the 20 test cases:
 After tidying up the test data set (pml.testing), we can estimate the exercise Classe of each one of the 20 test cases.
@@ -828,10 +828,10 @@ After tidying up the test data set (pml.testing), we can estimate the exercise C
  [1] B A B A A E D B A A B C B A E E A B B B
 Levels: A B C D E
 ```
-I have also evaluated the other 4 models:  modelFit2a, modelFit2b, modelFit2c and modelFit2f. These models presented slightly differnce in accuracies and as expected, all gave the same results.
+I have also evaluated the other 4 models:  modelFit2a, modelFit2b, modelFit2c and modelFit2f. These models presented slightly different inaccuracies and as expected, all gave the same results.
 
 ###Conclusions:
-In this report, it is shown how to download the data, look into it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). It was performed correlations between the variables to reduce the model complexity. The mains assumptions made for the proposed model is to be unperson and not time dependent. The initial 160 variables was reduced to 46. Final models shows that only 12 predictors could be used. Also, it was shown how to build a Machine Learning Model by using *caret* package, and how the parameters in the `train()` function can affect in the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in term of accuracy but the modelling of the training set was much more faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Forest method, all the models in this work predict the same result in the 20 test cases, that is:
+In this report, how to download the data is shown and also how to review it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). Correlations between the variables to reduce the model complexity were performed. The main assumptions made for the proposed model is to be person-independent and time-independent. The initial 160 variables were reduced to 46. Final models show that only 12 predictors could be used. Also, how to build a Machine Learning Model by using *caret* package was shown, along with how the parameters in the `train()` function can affect the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in terms of accuracy but the modelling of the training set was much faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Forest method, all the models in this work predict the same result in the 20 test cases, that is:
 ```R
   table(predict(modelFit2f, newdata = CaseDataTest))
 ```
