@@ -15,8 +15,8 @@ As part of the Coursera assessment, the report described here are restricted to 
 *   Apply the proposed model to predict 20 different test cases.
 
 ###Experiment description: 
-<image align="right" src="https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png" width="250">
 Six (6) volunteers weared four (4) "9 Degrees of Freedom - Razor IMU". Each one of Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, in which of them provides 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell. 
+<image src="https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png" width="250">
 
 The volunteers were male participants aged between 20-28 years. They performed one set of 10 repetitions of the activity "Unilateral Dumbbell Biceps Curl" in five different "classes", one class is the right way and the others in wrong way:
 - Class A - The rigth exercise (*i.e*., exactly according to the specification)
@@ -643,25 +643,14 @@ As part of the Coursera assessment, the work described here are restricted to an
 
 ***************************************************
 ####Reference:
-http://wiki.ros.org/razor_imu_9dof
 
 https://perceptual.mpi-inf.mpg.de/files/2013/03/velloso13_ah.pdf
 
 https://www.sparkfun.com/products/10736
 
-http://www.starlino.com/imu_guide.html
-
-http://www.aliexpress.com/item/DFRobot-9-degrees-of-freedom-inertial-navigation-sensors-9DOF-Razor-IMU-AHRS-compatib/1544796282.html
-
-http://www.jmlr.org/papers/volume3/guyon03a/guyon03a.pdf
-
-http://www.analyticsvidhya.com/blog/2016/03/select-important-variables-boruta-package/
-
 http://web.ipac.caltech.edu/staff/fmasci/home/astro_refs/BuildingPredictiveModelsR_caret.pdf
 
 http://topepo.github.io/caret/training.html
-
-http://will-stanton.com/machine-learning-with-r-an-irresponsibly-fast-tutorial/
 
 http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
 
