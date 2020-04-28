@@ -1,11 +1,11 @@
 # How well are we doing our Physical exercise?
 ***************************************************
 
-###Summary:
+### Summary:
 Nowadays, to improve the quality of life  more and more people are practising sports.Practice not only improves the body's physical condition or fitness but also decreases the likelihood of many ills related to a sedentary life style, such as heart disease. But, it is not only the act or quantity of doing physical exercise that matters. Many people usually forget that physical exercise when done in the wrong way, may be less effective. But on the other hand they can also be very damaging causing undesirable injuries. Therefore, the right way to perform the exercise is considered a top priority.
 This project is based on the work made by Veloso *et al.* "Qualitative Activity Recognition of Weight Lifting Exercises". The authors mounted sensors in six male volunteers to lift a relatively light dumbbell (1.25kg) weight. Five different ways (where only one is correct) to perform the lifting exercise were monitored by the sensors. The data collected were analysed and a machine learning model was built to assess the correctness and feedback to the user in real-time; increasing the likelihood of the exercise effectiveness. 
 
-###Scope:
+### Scope:
 As part of the Coursera assessment, the report described here are restricted to answer the followings:
 
 *   Predict the manner in which the exercise was done.
@@ -14,7 +14,7 @@ As part of the Coursera assessment, the report described here are restricted to 
 *   Discuss the assumptions made.
 *   Apply the proposed model to predict 20 different test cases.
 
-###Experiment description: 
+### Experiment description: 
 Six (6) volunteers wore four (4) "9 Degrees of Freedom - Razor IMU". Each one of the Razor IMU is composed of three sensors: accelerometer, gyroscope and magnetometer, each one providing 3 degrees of freedom. Therefore, a total of 9 degrees of freedom per location (see the sketch). The four locations were: glove, armband, lumbar belt and dumbbell.
 
 ![](https://raw.githubusercontent.com/anonymous-1618/ML/master/sketch.png)
@@ -26,7 +26,7 @@ The volunteers were male participants aged between 20-28 years. They performed o
 - Class D - Lowering the dumbbell only halfway
 - Class E - Throwing the hips to the front
 
-###Exploratory Data analysis:
+### Exploratory Data analysis:
 
 **1.	Download the data from a provided URL.**
 
