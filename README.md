@@ -194,7 +194,7 @@ From the initial 160, there are a total of 60 variables. We can still reduce the
 ```
 Therefore, the number of variables is reduced to 53.
 
-###Model Building
+### Model Building
 
 **5.	Propose Machine learning models base on the exploratory data**
 
@@ -397,7 +397,7 @@ Now we can compare the prediction result of the testing set with the actual valu
 ```
 Therefore the accuray estimated for the model fit is 0.9932 which means that the estimation error is ca. 0.68%.
 
-###Model Parameters Effect:
+### Model Parameters Effect:
 1.Selecting variables by Variable importance ranking:
 
 I tried to improve the model by changing the number of predictors. Based on the previous results, I reduced more of the number of variables by creating a cutoff point for the best variables by their importance:
@@ -791,7 +791,7 @@ We can see in Figure 3 that the error in all of them stabilised early than ntree
     
 The accuracy did not change by much, but the OOB error rate was the highest of all the evaluated models (1.26%). On the other hand, it was the fitted model that took less time (~ 6 minutes). 
     
-###Predicting the 20 test cases:
+### Predicting the 20 test cases:
 After tidying up the test data set (pml.testing), we can estimate the exercise Classe of each one of the 20 test cases.
 ```R
   temp=names(pml.testing)
@@ -829,7 +829,7 @@ Levels: A B C D E
 ```
 I have also evaluated the other 4 models:  modelFit2a, modelFit2b, modelFit2c and modelFit2f. These models presented slightly different inaccuracies and as expected, all gave the same results.
 
-###Conclusions:
+### Conclusions:
 In this report, how to download the data is shown and also how to review it by analysing the data structure. The data was also tidied up and reorganised for better variable description (CamelCase). Correlations between the variables to reduce the model complexity were performed. The main assumptions made for the proposed model is to be person-independent and time-independent. The initial 160 variables were reduced to 46. Final models show that only 12 predictors could be used. Also, how to build a Machine Learning Model by using *caret* package was shown, along with how the parameters in the `train()` function can affect the model accuracy and fitting time. For instance, k-fold cross validation gave similar results in terms of accuracy but the modelling of the training set was much faster than by using boostrap resampling. In all the cases, the number of predictors used in the final model was the same, that is, 23. The best sample error obtained was 0.68% with the original model. Finally, by using the Random Forest method, all the models in this work predict the same result in the 20 test cases, that is:
 ```R
   table(predict(modelFit2f, newdata = CaseDataTest))
@@ -843,7 +843,7 @@ Only 7 out of 20 shows the right way to perform the dumbbell lifting exercise.
 
 
 ***************************************************
-####Reference:
+#### Reference:
 
 https://perceptual.mpi-inf.mpg.de/files/2013/03/velloso13_ah.pdf
 
